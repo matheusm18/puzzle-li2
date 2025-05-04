@@ -53,7 +53,7 @@ int main() {
             }
 
             if (reconhecido) {
-                if (cmd == 'b' || cmd == 'r' || cmd == 'a' || cmd == 'A' || cmd == 'l' || cmd == 'd' ) {
+                if (cmd == 'b' || cmd == 'r' || cmd == 'a' || cmd == 'A' || cmd == 'l' || cmd == 'd' || cmd == 'R') {
                     mostrarTabuleiro(&estado);
                 }
             }

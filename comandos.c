@@ -364,16 +364,28 @@ bool cmdAjudar(char cmd, char *arg, Estado *e) {
         // pinta de branco uma casa quando seria impossivel que esta fosse riscada
         ajudaIsolada(e);
         
-        if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações
+        if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações (se for chamado pelo 'A' não é necessário)
 
             if (comparaTabuleiros(e, e->ultimoEstado) == false) { // se o tabuleiro foi alterado
-                if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
+                e->printar = false;
+                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
+                e->printar = ePrintarAntes; // restaura o estado da flag
+                
+                if (e->temInfracoes == true) { // se o tabuleiro ficou inválido
+                    printf("\nNão é possível ajudar nestas condições!\n");
+                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
+                }
+
+                else {
+                    if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
+                }
             }
 
             else {
                 if (e->printar == true) printf("\nNenhuma dica encontrada.\n");
                 cmdUndo('d', NULL, e); // desfaz o guardarEstado do inicio já que nada mudou
             }
+
         }
 
         return true;
@@ -406,8 +418,24 @@ bool cmdA (char cmd, char *arg, Estado *e) {
                 flagContinuar = false; // para o loop (n houve mudanças)
             }
 
-            else houveMudancasInicio = true;
-            memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
+            else {
+
+                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
+
+                if (e->temInfracoes == true && flagGuardarAntes == true) { // se o tabuleiro ficou inválido e o comando 'A' não foi chamado pelo 'R'
+                    e->printar = flagPrintarAntes; // restaura o estado da flag
+                    e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
+
+                    if (e->printar == true) printf("\nNão é possível ajudar nestas condições!\n");
+                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
+                    return true;
+                }
+
+                // se o tabuleiro foi alterado e não tem infrações
+                houveMudancasInicio = true;
+                memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
+
+            }
         }
 
         if (houveMudancasInicio == false && flagGuardarAntes == true) {
@@ -436,29 +464,33 @@ int resolverTabuleiro(Estado *e) {
             for (int j = 0; j < e->colunas; j++) {
                 if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
 
-                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]); // pinta a letra
-
+                    // backup do estado
                     Estado estadoBackup;
                     memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
 
-                    int resultado = resolverTabuleiro(e); // chama a função recursivamente para resolver o tabuleiro para este novo caso
+                    // tenta pintar
+                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]);
+                    int resultado = resolverTabuleiro(e);
+                    if (resultado == 1) return 1;
 
-                    if (resultado == 0) { // se não pode ser resolvido com a letra riscada volta pro backup
-                        memcpy(e, &estadoBackup, sizeof(Estado)); // restaura o estado original para antes das chamadas recursivas
+                    // volta ao estado anterior
+                    memcpy(e, &estadoBackup, sizeof(Estado));
 
-                        e->tabuleiro[i][j] = '#'; // risca a letra
-                        e->temInfracoes = false; // reinicia a flag de infrações (visto que pode ter sido alterada na recursão)
-                    }
+                    // tenta riscar
+                    e->tabuleiro[i][j] = '#';
+                    e->temInfracoes = false; // reseta flag
+                    resultado = resolverTabuleiro(e);
+                    if (resultado == 1) return 1;
 
-                    if (resultado == 1) return 1; // se o tabuleiro foi resolvido na recursão
+                    // volta ao estado original de novo
+                    memcpy(e, &estadoBackup, sizeof(Estado));
 
+                    return 0;
                 }
             }
         }
 
-    // após mudar todas as letras mesmo assim não for possível resolver, então é impossível
-    if (tabuleiroResolvido(e) == 0) return 0; // tabuleiro não pode ser resolvido
-    else return 1;
+    return 0;
 }
 
 bool cmdResolver(char cmd, char *arg, Estado *e) {
@@ -466,12 +498,11 @@ bool cmdResolver(char cmd, char *arg, Estado *e) {
 
         if (tabuleiroResolvido(e) == 1) { // se o tabuleiro já estiver resolvido
             printf("\nO tabuleiro já está resolvido!\n");
-            mostrarTabuleiro(e);
             return true;
         }
 
         // guarda o estado atual antes de começar a resolver
-        if (e->guardarEstados == true) guardarEstado(e); 
+        guardarEstado(e);
 
         e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar os cmds
         e->printar = false; // desativa a flag de printar
@@ -483,13 +514,11 @@ bool cmdResolver(char cmd, char *arg, Estado *e) {
 
         if (resultado == 0) { // se não pode ser resolvido
             printf("\nAviso: O tabuleiro não pode ser resolvido.\n");
-            // desfaz o guardarEstado do inicio já que nada mudou
-            cmdUndo('d', NULL, e);
+            cmdUndo('d', NULL, e); // volta ao estado anterior
             return true;
         }
         else {
             printf("\nO tabuleiro está resolvido!\n");
-            mostrarTabuleiro(e);
         }
 
         return true;
