@@ -1,388 +1,388 @@
         -:    0:Source:comandos.c
         -:    0:Graph:comandos.gcno
         -:    0:Data:comandos.gcda
-        -:    0:Runs:1
+        -:    0:Runs:2
         -:    1:#include "comandos.h"
         -:    2:
-function cmdLer called 7 returned 100% blocks executed 98%
-        7:    3:bool cmdLer(char cmd, char *arg, Estado *e) {
-        7:    4:    if (cmd != 'l') return false;
-branch  0 taken 7 (fallthrough)
+function cmdLer called 14 returned 100% blocks executed 100%
+       14:    3:bool cmdLer(char cmd, char *arg, Estado *e) {
+       14:    4:    if (cmd != 'l') return false;
+branch  0 taken 14 (fallthrough)
 branch  1 taken 0
         -:    5:    
-        7:    6:    if (arg == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 6
-        1:    7:        printf("\nErro: o comando ler precisa de um argumento!\n");
-call    0 returned 1
-        1:    8:        e->deuAviso = true;
-        1:    9:        return false; // erro
+       14:    6:    if (arg == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 12
+        2:    7:        printf("\nErro: o comando ler precisa de um argumento!\n");
+call    0 returned 2
+        2:    8:        e->deuAviso = true;
+        2:    9:        return false; // erro
         -:   10:    }
         -:   11:
         -:   12:    // ficheiro é ponteiro para o tipo file (fopen retorna endereco)
-        6:   13:    FILE *ficheiro = fopen(arg, "r");
-call    0 returned 6
-        6:   14:    if (ficheiro == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 5
-        1:   15:        printf("\nErro: erro ao abrir '%s'.\n", arg);
-call    0 returned 1
-        1:   16:        e->deuAviso = true;
-        1:   17:        return false; // erro
+       12:   13:    FILE *ficheiro = fopen(arg, "r");
+call    0 returned 12
+       12:   14:    if (ficheiro == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 10
+        2:   15:        printf("\nErro: erro ao abrir '%s'.\n", arg);
+call    0 returned 2
+        2:   16:        e->deuAviso = true;
+        2:   17:        return false; // erro
         -:   18:    }
         -:   19:    
-       5*:   20:    if (e->carregouTabuleiro == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
-branch  0 taken 0 (fallthrough)
-branch  1 taken 5
-call    2 never executed
+       10:   20:    if (e->carregouTabuleiro == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
+branch  0 taken 2 (fallthrough)
+branch  1 taken 8
+call    2 returned 2
         -:   21:
         -:   22:    // armazena no estado -> linhas
-        5:   23:    if (fscanf(ficheiro, "%d %d", &(e->linhas), &(e->colunas)) != 2) {
-call    0 returned 5
-branch  1 taken 1 (fallthrough)
-branch  2 taken 4
-        1:   24:        fclose(ficheiro);
-call    0 returned 1
-        1:   25:        e->deuAviso = true;
-        1:   26:        printf("\nErro: Formato inválido no ficheiro.\n");
-call    0 returned 1
-        1:   27:        return false;
-call    0 returned 1
+       10:   23:    if (fscanf(ficheiro, "%d %d", &(e->linhas), &(e->colunas)) != 2) {
+call    0 returned 10
+branch  1 taken 2 (fallthrough)
+branch  2 taken 8
+        2:   24:        fclose(ficheiro);
+call    0 returned 2
+        2:   25:        e->deuAviso = true;
+        2:   26:        printf("\nErro: Formato inválido no ficheiro.\n");
+call    0 returned 2
+        2:   27:        return false;
+call    0 returned 2
         -:   28:    }
         -:   29:
-        4:   30:    if (e->linhas <= 0 || e->colunas <= 0 || e->linhas > TMAX_MATRIZ || e->colunas > TMAX_MATRIZ) {
-branch  0 taken 3 (fallthrough)
-branch  1 taken 1
-branch  2 taken 3 (fallthrough)
+        8:   30:    if (e->linhas <= 0 || e->colunas <= 0 || e->linhas > TMAX_MATRIZ || e->colunas > TMAX_MATRIZ) {
+branch  0 taken 6 (fallthrough)
+branch  1 taken 2
+branch  2 taken 6 (fallthrough)
 branch  3 taken 0
-branch  4 taken 3 (fallthrough)
+branch  4 taken 6 (fallthrough)
 branch  5 taken 0
 branch  6 taken 0 (fallthrough)
-branch  7 taken 3
-        1:   31:        printf("\nErro: As dimensões do tabuleiro são inválidas.\n");
-call    0 returned 1
-        1:   32:        e->deuAviso = true;
-        1:   33:        fclose(ficheiro);
-        1:   34:        return false;
-call    0 returned 1
+branch  7 taken 6
+        2:   31:        printf("\nErro: As dimensões do tabuleiro são inválidas.\n");
+call    0 returned 2
+        2:   32:        e->deuAviso = true;
+        2:   33:        fclose(ficheiro);
+        2:   34:        return false;
+call    0 returned 2
         -:   35:    }
         -:   36:
-        3:   37:    while (fgetc(ficheiro) != '\n'); // retira os espaços e passa o "cursor" para depois do \n
-call    0 returned 3
+        6:   37:    while (fgetc(ficheiro) != '\n'); // retira os espaços e passa o "cursor" para depois do \n
+call    0 returned 6
 branch  1 taken 0
-branch  2 taken 3 (fallthrough)
+branch  2 taken 6 (fallthrough)
         -:   38:
-        3:   39:    char linha[TMAX_MATRIZ + 2]; // adiciona espaço p/ \n e o \0
-        6:   40:    for (int i = 0; i < e->linhas; i++) {
-call    0 returned 3
-branch  1 taken 5
-branch  2 taken 1 (fallthrough)
-        5:   41:        if (fgets(linha, sizeof(linha), ficheiro) == NULL) {
-call    0 returned 5
-branch  1 taken 1 (fallthrough)
-branch  2 taken 4
-        1:   42:            e->deuAviso = true;
-        1:   43:            printf("\nErro ao ler a linha '%d'.\n", i+1);
-call    0 returned 1
-        1:   44:            fclose(ficheiro);
-        1:   45:            return false;
-call    0 returned 1
+        6:   39:    char linha[TMAX_MATRIZ + 2]; // adiciona espaço p/ \n e o \0
+       12:   40:    for (int i = 0; i < e->linhas; i++) {
+call    0 returned 6
+branch  1 taken 10
+branch  2 taken 2 (fallthrough)
+       10:   41:        if (fgets(linha, sizeof(linha), ficheiro) == NULL) {
+call    0 returned 10
+branch  1 taken 2 (fallthrough)
+branch  2 taken 8
+        2:   42:            e->deuAviso = true;
+        2:   43:            printf("\nErro ao ler a linha '%d'.\n", i+1);
+call    0 returned 2
+        2:   44:            fclose(ficheiro);
+        2:   45:            return false;
+call    0 returned 2
         -:   46:        }
         -:   47:        // remove o '\n' no final (strcspn retorna o indice do \n) p possibilitar futura comparacao
-        4:   48:        linha[strcspn(linha, "\n")] = '\0';
+        8:   48:        linha[strcspn(linha, "\n")] = '\0';
         -:   49:
-       11:   50:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 8
-branch  1 taken 3 (fallthrough)
-        8:   51:            if (linha[j] == '\0') {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 7
-        1:   52:                e->deuAviso = true;
-        1:   53:                printf("\nErro: linha %d menor que o esperado.\n", i); // se introduziu uma dimensao e depois a linha era dif
-call    0 returned 1
-        1:   54:                fclose(ficheiro);
-        1:   55:                return false;
-call    0 returned 1
+       22:   50:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 16
+branch  1 taken 6 (fallthrough)
+       16:   51:            if (linha[j] == '\0') {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 14
+        2:   52:                e->deuAviso = true;
+        2:   53:                printf("\nErro: linha %d menor que o esperado.\n", i); // se introduziu uma dimensao e depois a linha era dif
+call    0 returned 2
+        2:   54:                fclose(ficheiro);
+        2:   55:                return false;
+call    0 returned 2
         -:   56:            }
-        7:   57:            e->tabuleiro[i][j] = linha[j];
+       14:   57:            e->tabuleiro[i][j] = linha[j];
         -:   58:        }
         -:   59:    }
         -:   60:
-        1:   61:    fclose(ficheiro);
-call    0 returned 1
-        1:   62:    if (e->printar == true) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 0
-        1:   63:        printf("\nTabuleiro inicial %dx%d carregado:\n", e->linhas, e->colunas);
-call    0 returned 1
-        1:   64:        e->deuAviso = true;
-        -:   65:    }
-        -:   66:
-        1:   67:    e->carregouTabuleiro = true;
-        1:   68:    return true;
-        -:   69:}
-        -:   70:
-function cmdGravar called 2 returned 100% blocks executed 100%
-        2:   71:bool cmdGravar(char cmd, char *arg, Estado *e) {
-        2:   72:    if (cmd != 'g') return false;
+        2:   61:    fclose(ficheiro);
+call    0 returned 2
+        2:   62:    if (e->printar == true) {
 branch  0 taken 2 (fallthrough)
 branch  1 taken 0
-        2:   73:    if (arg == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-        1:   74:        printf("\nErro: o comando gravar precisa de um argumento!\n");
-call    0 returned 1
-        1:   75:        e->deuAviso = true;
-        1:   76:        return false; // erro
+        2:   63:        printf("\nTabuleiro inicial %dx%d carregado:\n", e->linhas, e->colunas);
+call    0 returned 2
+        2:   64:        e->deuAviso = true;
+        -:   65:    }
+        -:   66:
+        2:   67:    e->carregouTabuleiro = true;
+        2:   68:    return true;
+        -:   69:}
+        -:   70:
+function cmdGravar called 4 returned 100% blocks executed 100%
+        4:   71:bool cmdGravar(char cmd, char *arg, Estado *e) {
+        4:   72:    if (cmd != 'g') return false;
+branch  0 taken 4 (fallthrough)
+branch  1 taken 0
+        4:   73:    if (arg == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
+        2:   74:        printf("\nErro: o comando gravar precisa de um argumento!\n");
+call    0 returned 2
+        2:   75:        e->deuAviso = true;
+        2:   76:        return false; // erro
         -:   77:    }
         -:   78:
         -:   79:    // ficheiro é ponteiro para o tipo file (fopen retorna endereco)
-        1:   80:    FILE *ficheiro = fopen(arg, "w");
-call    0 returned 1
-        1:   81:    fprintf(ficheiro, "%d %d\n", e->linhas, e->colunas);
-call    0 returned 1
-        3:   82:    for (int i = 0; i < e->linhas; i++) {
-call    0 returned 1
-branch  1 taken 2
-branch  2 taken 1 (fallthrough)
-        6:   83:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 4
-branch  1 taken 2 (fallthrough)
-        4:   84:            fprintf(ficheiro, "%c", e->tabuleiro[i][j]);
-call    0 returned 4
-        -:   85:        }
-        2:   86:        fprintf(ficheiro, "\n"); // a cada linha que escrever escreve o \n
+        2:   80:    FILE *ficheiro = fopen(arg, "w");
 call    0 returned 2
+        2:   81:    fprintf(ficheiro, "%d %d\n", e->linhas, e->colunas);
+call    0 returned 2
+        6:   82:    for (int i = 0; i < e->linhas; i++) {
+call    0 returned 2
+branch  1 taken 4
+branch  2 taken 2 (fallthrough)
+       12:   83:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 8
+branch  1 taken 4 (fallthrough)
+        8:   84:            fprintf(ficheiro, "%c", e->tabuleiro[i][j]);
+call    0 returned 8
+        -:   85:        }
+        4:   86:        fprintf(ficheiro, "\n"); // a cada linha que escrever escreve o \n
+call    0 returned 4
         -:   87:    }
         -:   88:
-        1:   89:    fclose(ficheiro);
-call    0 returned 1
+        2:   89:    fclose(ficheiro);
+call    0 returned 2
         -:   90:
-        1:   91:    if (e->printar == true) {
-branch  0 taken 1 (fallthrough)
+        2:   91:    if (e->printar == true) {
+branch  0 taken 2 (fallthrough)
 branch  1 taken 0
-        1:   92:        printf("\nTabuleiro gravado em '%s'.\n", arg);
-call    0 returned 1
-        1:   93:        e->deuAviso = true;
+        2:   92:        printf("\nTabuleiro gravado em '%s'.\n", arg);
+call    0 returned 2
+        2:   93:        e->deuAviso = true;
         -:   94:    }
         -:   95:
         -:   96:    return true;
         -:   97:}
         -:   98:
-function cmdSair called 2 returned 100% blocks executed 100%
-        2:   99:bool cmdSair(char cmd, char *arg, Estado *e) {
-        2:  100:    if (cmd == 's' && arg == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-        1:  101:        e->looping = false;
-        1:  102:        return true; // comando foi reconhecido
+function cmdSair called 4 returned 100% blocks executed 100%
+        4:   99:bool cmdSair(char cmd, char *arg, Estado *e) {
+        4:  100:    if (cmd == 's' && arg == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
+        2:  101:        e->looping = false;
+        2:  102:        return true; // comando foi reconhecido
         -:  103:    }
         -:  104:    return false; // comando não foi reconhecido
         -:  105:}
         -:  106:
         -:  107:
-function cmdPintar called 6 returned 100% blocks executed 95%
-        6:  108:bool cmdPintar(char cmd, char *arg, Estado *e) {
-        6:  109:    if (cmd != 'b' || e->carregouTabuleiro == false) return false;
-branch  0 taken 6 (fallthrough)
+function cmdPintar called 12 returned 100% blocks executed 100%
+       12:  108:bool cmdPintar(char cmd, char *arg, Estado *e) {
+       12:  109:    if (cmd != 'b' || e->carregouTabuleiro == false) return false;
+branch  0 taken 12 (fallthrough)
 branch  1 taken 0
-branch  2 taken 5 (fallthrough)
-branch  3 taken 1
+branch  2 taken 10 (fallthrough)
+branch  3 taken 2
         -:  110:    
-        5:  111:    int x;
-call    0 returned 5
-        5:  112:    char y;
-call    0 returned 5
-        5:  113:    if (sscanf(arg, "%c%d", &y, &x) != 2) return false;
-branch  0 taken 5 (fallthrough)
+       10:  111:    int x;
+call    0 returned 10
+       10:  112:    char y;
+call    0 returned 10
+       10:  113:    if (sscanf(arg, "%c%d", &y, &x) != 2) return false;
+branch  0 taken 10 (fallthrough)
 branch  1 taken 0
         -:  114:
-        5:  115:    int coluna = y - 'a'; // 'a' corresponde a 0, 'b' a 1 etc
-        5:  116:    if (x >= 0 && x < e->linhas && coluna >= 0 && coluna < e->colunas) {
-branch  0 taken 5 (fallthrough)
+       10:  115:    int coluna = y - 'a'; // 'a' corresponde a 0, 'b' a 1 etc
+       10:  116:    if (x >= 0 && x < e->linhas && coluna >= 0 && coluna < e->colunas) {
+branch  0 taken 10 (fallthrough)
 branch  1 taken 0
-branch  2 taken 4 (fallthrough)
-branch  3 taken 1
-branch  4 taken 4 (fallthrough)
+branch  2 taken 8 (fallthrough)
+branch  3 taken 2
+branch  4 taken 8 (fallthrough)
 branch  5 taken 0
-branch  6 taken 3 (fallthrough)
-branch  7 taken 1
+branch  6 taken 6 (fallthrough)
+branch  7 taken 2
         -:  117:
-        3:  118:        if (e->tabuleiro[x][coluna] == '#') {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 2
-        1:  119:            printf("\nErro: não é possível pintar uma célula já riscada.\n");
-call    0 returned 1
-        1:  120:            e->deuAviso = true;
-        1:  121:            return false;
+        6:  118:        if (e->tabuleiro[x][coluna] == '#') {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 4
+        2:  119:            printf("\nErro: não é possível pintar uma célula já riscada.\n");
+call    0 returned 2
+        2:  120:            e->deuAviso = true;
+        2:  121:            return false;
         -:  122:        }
         -:  123:
-        2:  124:        if (e->tabuleiro[x][coluna] >= 'A' && e->tabuleiro[x][coluna] <= 'Z') {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-        1:  125:            printf("\nErro: não é possível pintar uma célula já pintada.\n");
-call    0 returned 1
-        1:  126:            e->deuAviso = true;
-        1:  127:            return false;
+        4:  124:        if (e->tabuleiro[x][coluna] >= 'A' && e->tabuleiro[x][coluna] <= 'Z') {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
+        2:  125:            printf("\nErro: não é possível pintar uma célula já pintada.\n");
+call    0 returned 2
+        2:  126:            e->deuAviso = true;
+        2:  127:            return false;
         -:  128:        }
         -:  129:
-       1*:  130:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
-branch  0 taken 0 (fallthrough)
-branch  1 taken 1
-call    2 never executed
-        1:  131:        e->tabuleiro[x][coluna] = toupper(e->tabuleiro[x][coluna]);
-        1:  132:        return true;
+        2:  130:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
+branch  0 taken 2 (fallthrough)
+branch  1 taken 0
+call    2 returned 2
+        2:  131:        e->tabuleiro[x][coluna] = toupper(e->tabuleiro[x][coluna]);
+        2:  132:        return true;
         -:  133:    }
         -:  134:    return false;
         -:  135:}
         -:  136:
-function cmdRiscar called 6 returned 100% blocks executed 100%
-        6:  137:bool cmdRiscar(char cmd, char *arg, Estado *e) {
-        6:  138:    if (cmd != 'r' || e->carregouTabuleiro == false) return false;
-branch  0 taken 5 (fallthrough)
-branch  1 taken 1
-branch  2 taken 5 (fallthrough)
+function cmdRiscar called 12 returned 100% blocks executed 100%
+       12:  137:bool cmdRiscar(char cmd, char *arg, Estado *e) {
+       12:  138:    if (cmd != 'r' || e->carregouTabuleiro == false) return false;
+branch  0 taken 10 (fallthrough)
+branch  1 taken 2
+branch  2 taken 10 (fallthrough)
 branch  3 taken 0
         -:  139:    
-        5:  140:    int x;
-call    0 returned 5
-        5:  141:    char y;
-call    0 returned 5
-        5:  142:    if (sscanf(arg, "%c%d", &y, &x) != 2) return false;
-branch  0 taken 5 (fallthrough)
+       10:  140:    int x;
+call    0 returned 10
+       10:  141:    char y;
+call    0 returned 10
+       10:  142:    if (sscanf(arg, "%c%d", &y, &x) != 2) return false;
+branch  0 taken 10 (fallthrough)
 branch  1 taken 0
         -:  143:    
-        5:  144:    int coluna = y - 'a';
-        5:  145:    if (x >= 0 && x < e->linhas && coluna >= 0 && coluna < e->colunas) {
-branch  0 taken 5 (fallthrough)
+       10:  144:    int coluna = y - 'a';
+       10:  145:    if (x >= 0 && x < e->linhas && coluna >= 0 && coluna < e->colunas) {
+branch  0 taken 10 (fallthrough)
 branch  1 taken 0
-branch  2 taken 4 (fallthrough)
-branch  3 taken 1
-branch  4 taken 4 (fallthrough)
+branch  2 taken 8 (fallthrough)
+branch  3 taken 2
+branch  4 taken 8 (fallthrough)
 branch  5 taken 0
-branch  6 taken 3 (fallthrough)
-branch  7 taken 1
+branch  6 taken 6 (fallthrough)
+branch  7 taken 2
         -:  146:
-        3:  147:        if (e->tabuleiro[x][coluna] == '#') {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 2
-        1:  148:            printf("\nErro: não é possível riscar uma célula já riscada.\n");
-call    0 returned 1
-        1:  149:            e->deuAviso = true;
-        1:  150:            return false;
+        6:  147:        if (e->tabuleiro[x][coluna] == '#') {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 4
+        2:  148:            printf("\nErro: não é possível riscar uma célula já riscada.\n");
+call    0 returned 2
+        2:  149:            e->deuAviso = true;
+        2:  150:            return false;
         -:  151:        }
         -:  152:
-        2:  153:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-call    2 returned 1
-        2:  154:        e->tabuleiro[x][coluna] = '#';
-        2:  155:        return true;
+        4:  153:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
+branch  0 taken 4 (fallthrough)
+branch  1 taken 0
+call    2 returned 4
+        4:  154:        e->tabuleiro[x][coluna] = '#';
+        4:  155:        return true;
         -:  156:    }
         -:  157:    return false;
         -:  158:}
         -:  159:
-function cmdUndo called 6 returned 100% blocks executed 100%
-        6:  160:bool cmdUndo(char cmd, char *arg, Estado *e) {
-        6:  161:    if (cmd == 'd' && arg == NULL) {
-branch  0 taken 6 (fallthrough)
+function cmdUndo called 16 returned 100% blocks executed 100%
+       16:  160:bool cmdUndo(char cmd, char *arg, Estado *e) {
+       16:  161:    if (cmd == 'd' && arg == NULL) {
+branch  0 taken 16 (fallthrough)
 branch  1 taken 0
-        6:  162:        if (e->ultimoEstado == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 5
-        1:  163:            printf("\nErro: não há comandos anteriores para desfazer.\n");
-call    0 returned 1
-        1:  164:            e->deuAviso = true;
-        1:  165:            return false;
+       16:  162:        if (e->ultimoEstado == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 14
+        2:  163:            printf("\nErro: não há comandos anteriores para desfazer.\n");
+call    0 returned 2
+        2:  164:            e->deuAviso = true;
+        2:  165:            return false;
         -:  166:        }
         -:  167:        // fazer pop da stack (remove o que esta mais em cima (estado e))
-        5:  168:        Estado *estadoAnterior = e->ultimoEstado; // pega o estado anterior
-        5:  169:        memcpy(e, estadoAnterior, sizeof(Estado)); // restaura o estado anterior (duplica e copia)
+       14:  168:        Estado *estadoAnterior = e->ultimoEstado; // pega o estado anterior
+       14:  169:        memcpy(e, estadoAnterior, sizeof(Estado)); // restaura o estado anterior (duplica e copia)
         -:  170:
-        5:  171:        free(estadoAnterior); // libera a memória do estado anterior
-        5:  172:        return true;
+       14:  171:        free(estadoAnterior); // libera a memória do estado anterior
+       14:  172:        return true;
         -:  173:    }
         -:  174:    return false;
         -:  175:}
         -:  176:
-function casasPossiveisVisitar called 2229 returned 100% blocks executed 100%
-     2229:  177:int casasPossiveisVisitar(Estado *e, int l, int c, int visitadas[e->linhas][e->colunas]) {
-     2229:  178:    if (l < 0 || l >= e->linhas || c < 0 || c >= e->colunas || visitadas[l][c] == 1 || e->tabuleiro[l][c] == '#') return 0;
-branch  0 taken 2044 (fallthrough)
-branch  1 taken 185
-branch  2 taken 1861 (fallthrough)
-branch  3 taken 183
-branch  4 taken 1659 (fallthrough)
-branch  5 taken 202
-branch  6 taken 1468 (fallthrough)
-branch  7 taken 191
-branch  8 taken 757 (fallthrough)
-branch  9 taken 711
-branch 10 taken 536 (fallthrough)
-branch 11 taken 221
+function casasPossiveisVisitar called 5081 returned 100% blocks executed 100%
+     5081:  177:int casasPossiveisVisitar(Estado *e, int l, int c, int visitadas[e->linhas][e->colunas]) {
+     5081:  178:    if (l < 0 || l >= e->linhas || c < 0 || c >= e->colunas || visitadas[l][c] == 1 || e->tabuleiro[l][c] == '#') return 0;
+branch  0 taken 4656 (fallthrough)
+branch  1 taken 425
+branch  2 taken 4221 (fallthrough)
+branch  3 taken 435
+branch  4 taken 3769 (fallthrough)
+branch  5 taken 452
+branch  6 taken 3307 (fallthrough)
+branch  7 taken 462
+branch  8 taken 1742 (fallthrough)
+branch  9 taken 1565
+branch 10 taken 1218 (fallthrough)
+branch 11 taken 524
         -:  179:
-      536:  180:    visitadas[l][c] = 1; // marca a casa como visitada
+     1218:  180:    visitadas[l][c] = 1; // marca a casa como visitada
         -:  181:
-      536:  182:    return (1 + casasPossiveisVisitar(e, l - 1, c, visitadas) + casasPossiveisVisitar(e, l + 1, c, visitadas) + casasPossiveisVisitar(e, l, c - 1, visitadas) + casasPossiveisVisitar(e, l, c + 1, visitadas));
-call    0 returned 536
-call    1 returned 536
-call    2 returned 536
-call    3 returned 536
+     1218:  182:    return (1 + casasPossiveisVisitar(e, l - 1, c, visitadas) + casasPossiveisVisitar(e, l + 1, c, visitadas) + casasPossiveisVisitar(e, l, c - 1, visitadas) + casasPossiveisVisitar(e, l, c + 1, visitadas));
+call    0 returned 1218
+call    1 returned 1218
+call    2 returned 1218
+call    3 returned 1218
         -:  183:}
         -:  184:
-function cmdVerificarRestricoes called 48 returned 100% blocks executed 95%
-       48:  185:bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
-       48:  186:    if (cmd != 'v' || arg != NULL || e->carregouTabuleiro == false) return false;
-branch  0 taken 48 (fallthrough)
+function cmdVerificarRestricoes called 121 returned 100% blocks executed 100%
+      121:  185:bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
+      121:  186:    if (cmd != 'v' || arg != NULL || e->carregouTabuleiro == false) return false;
+branch  0 taken 121 (fallthrough)
 branch  1 taken 0
-branch  2 taken 48 (fallthrough)
+branch  2 taken 121 (fallthrough)
 branch  3 taken 0
         -:  187:
-       48:  188:    e->temInfracoes = false; // reinicia a flag de infrações
+      121:  188:    e->temInfracoes = false; // reinicia a flag de infrações
         -:  189:
         -:  190:    // verificar letras brancas repetidas na mesma linha/coluna
-      171:  191:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 123
-branch  1 taken 48
-      450:  192:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 327
-branch  1 taken 123 (fallthrough)
-      327:  193:            char celula = e->tabuleiro[i][j];
+      421:  191:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 300
+branch  1 taken 121
+     1074:  192:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 774
+branch  1 taken 300 (fallthrough)
+      774:  193:            char celula = e->tabuleiro[i][j];
         -:  194:            
         -:  195:            // verificar apenas células brancas (letras maiúsculas)
-      327:  196:            if (isupper(celula)) {
-branch  0 taken 152 (fallthrough)
-branch  1 taken 175
+      774:  196:            if (isupper(celula)) {
+branch  0 taken 355 (fallthrough)
+branch  1 taken 419
         -:  197:                // verificar mesma linha
-      300:  198:                for (int k = j+1; k < e->colunas; k++) {
-branch  0 taken 148
-branch  1 taken 152 (fallthrough)
-      148:  199:                    if (k != j && e->tabuleiro[i][k] == celula) {
-branch  0 taken 148 (fallthrough)
+      675:  198:                for (int k = j+1; k < e->colunas; k++) {
+branch  0 taken 320
+branch  1 taken 355 (fallthrough)
+      320:  199:                    if (k != j && e->tabuleiro[i][k] == celula) {
+branch  0 taken 320 (fallthrough)
 branch  1 taken 0
-branch  2 taken 14 (fallthrough)
-branch  3 taken 134
-       14:  200:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+k,i);
-branch  0 taken 1 (fallthrough)
-branch  1 taken 13
-call    2 returned 1
-       14:  201:                        e->temInfracoes = true;
+branch  2 taken 19 (fallthrough)
+branch  3 taken 301
+       19:  200:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+k,i);
+branch  0 taken 2 (fallthrough)
+branch  1 taken 17
+call    2 returned 2
+       19:  201:                        e->temInfracoes = true;
         -:  202:                    }
         -:  203:                }
         -:  204:                // verificar mesma coluna
-      301:  205:                for (int k = i+1; k < e->linhas; k++) {
-branch  0 taken 149
-branch  1 taken 152 (fallthrough)
-      149:  206:                    if (k != i && e->tabuleiro[k][j] == celula) {
-branch  0 taken 149 (fallthrough)
+      687:  205:                for (int k = i+1; k < e->linhas; k++) {
+branch  0 taken 332
+branch  1 taken 355 (fallthrough)
+      332:  206:                    if (k != i && e->tabuleiro[k][j] == celula) {
+branch  0 taken 332 (fallthrough)
 branch  1 taken 0
-branch  2 taken 1 (fallthrough)
-branch  3 taken 148
-        1:  207:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+j,k);
-branch  0 taken 1 (fallthrough)
-branch  1 taken 0
-call    2 returned 1
-        1:  208:                        e->temInfracoes = true;
+branch  2 taken 20 (fallthrough)
+branch  3 taken 312
+       20:  207:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+j,k);
+branch  0 taken 2 (fallthrough)
+branch  1 taken 18
+call    2 returned 2
+       20:  208:                        e->temInfracoes = true;
         -:  209:                    }
         -:  210:                }
         -:  211:            }
@@ -390,228 +390,228 @@ call    2 returned 1
         -:  213:    }
         -:  214:    
         -:  215:    // verificar celulas riscadas vizinhas ortogonal
-      171:  216:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 123
-branch  1 taken 48 (fallthrough)
-      450:  217:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 327
-branch  1 taken 123 (fallthrough)
-      327:  218:            if (e->tabuleiro[i][j] == '#') {
-branch  0 taken 38 (fallthrough)
-branch  1 taken 289
+      421:  216:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 300
+branch  1 taken 121 (fallthrough)
+     1074:  217:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 774
+branch  1 taken 300 (fallthrough)
+      774:  218:            if (e->tabuleiro[i][j] == '#') {
+branch  0 taken 96 (fallthrough)
+branch  1 taken 678
         -:  219:                // verificar em baixo e a direita
-       38:  220:                if (i < (e->linhas - 1) && e->tabuleiro[i+1][j] == '#') { // verifica em baixo
-branch  0 taken 16 (fallthrough)
-branch  1 taken 22
-branch  2 taken 1 (fallthrough)
-branch  3 taken 15
-        1:  221:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j, i+1);
-branch  0 taken 1 (fallthrough)
-branch  1 taken 0
-call    2 returned 1
-        1:  222:                    e->temInfracoes = true;
+       96:  220:                if (i < (e->linhas - 1) && e->tabuleiro[i+1][j] == '#') { // verifica em baixo
+branch  0 taken 47 (fallthrough)
+branch  1 taken 49
+branch  2 taken 3 (fallthrough)
+branch  3 taken 44
+        3:  221:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j, i+1);
+branch  0 taken 2 (fallthrough)
+branch  1 taken 1
+call    2 returned 2
+        3:  222:                    e->temInfracoes = true;
         -:  223:                }
-       38:  224:                if (j < (e->colunas - 1) && e->tabuleiro[i][j+1] == '#') { // verifica a direita
-branch  0 taken 22 (fallthrough)
-branch  1 taken 16
-branch  2 taken 1 (fallthrough)
-branch  3 taken 21
-        1:  225:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j+1, i);
-branch  0 taken 1 (fallthrough)
+       96:  224:                if (j < (e->colunas - 1) && e->tabuleiro[i][j+1] == '#') { // verifica a direita
+branch  0 taken 70 (fallthrough)
+branch  1 taken 26
+branch  2 taken 2 (fallthrough)
+branch  3 taken 68
+        2:  225:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j+1, i);
+branch  0 taken 2 (fallthrough)
 branch  1 taken 0
-call    2 returned 1
-        1:  226:                    e->temInfracoes = true;
+call    2 returned 2
+        2:  226:                    e->temInfracoes = true;
         -:  227:                }
         -:  228:            }
         -:  229:        }
         -:  230:    }
         -:  231:    
         -:  232:    // verificar se todas as casas estão ligadas por um caminho ortogonal
-       48:  233:    int contadorLetras = 0;
-       48:  234:    int visitadas[e->linhas][e->colunas];
+      121:  233:    int contadorLetras = 0;
+      121:  234:    int visitadas[e->linhas][e->colunas];
         -:  235:
-      171:  236:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 123
-branch  1 taken 48
-      450:  237:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 327
-branch  1 taken 123 (fallthrough)
-      327:  238:            visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
+      421:  236:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 300
+branch  1 taken 121
+     1074:  237:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 774
+branch  1 taken 300 (fallthrough)
+      774:  238:            visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
         -:  239:        }
         -:  240:    }
         -:  241:
         -:  242:    int linha = 0, coluna = 0;
-      171:  243:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 123
-branch  1 taken 48 (fallthrough)
-      450:  244:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 327
-branch  1 taken 123 (fallthrough)
-      327:  245:            if (e->tabuleiro[i][j] != '#') {
-branch  0 taken 289 (fallthrough)
-branch  1 taken 38
-      289:  246:                linha = i; coluna = j;
-      289:  247:                contadorLetras++;
+      421:  243:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 300
+branch  1 taken 121 (fallthrough)
+     1074:  244:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 774
+branch  1 taken 300 (fallthrough)
+      774:  245:            if (e->tabuleiro[i][j] != '#') {
+branch  0 taken 678 (fallthrough)
+branch  1 taken 96
+      678:  246:                linha = i; coluna = j;
+      678:  247:                contadorLetras++;
         -:  248:            }
         -:  249:        }
         -:  250:}
         -:  251:
-       48:  252:    if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
-call    0 returned 48
-branch  1 taken 0 (fallthrough)
-branch  2 taken 48
-    #####:  253:        if (e->printar == true) {
-branch  0 never executed (fallthrough)
-branch  1 never executed
-    #####:  254:            printf("\nInfração: não há um caminho entre todas as casas do tabuleiro.\n");
-call    0 never executed
+      121:  252:    if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
+call    0 returned 121
+branch  1 taken 2 (fallthrough)
+branch  2 taken 119
+        2:  253:        if (e->printar == true) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 0
+        2:  254:            printf("\nInfração: não há um caminho entre todas as casas do tabuleiro.\n");
+call    0 returned 2
         -:  255:        }
-    #####:  256:        e->temInfracoes = true;
+        2:  256:        e->temInfracoes = true;
         -:  257:    }
         -:  258:
-       48:  259:    if (e->temInfracoes == false && e->printar == true) printf("\nNenhuma infração encontrada. Tabuleiro válido!\n");
-branch  0 taken 31 (fallthrough)
-branch  1 taken 17
-branch  2 taken 1 (fallthrough)
-branch  3 taken 30
-call    4 returned 1
+      121:  259:    if (e->temInfracoes == false && e->printar == true) printf("\nNenhuma infração encontrada. Tabuleiro válido!\n");
+branch  0 taken 75 (fallthrough)
+branch  1 taken 46
+branch  2 taken 2 (fallthrough)
+branch  3 taken 73
+call    4 returned 2
         -:  260:    return true;
         -:  261:}
         -:  262:
         -:  263:// pintar de branco uma casa quando seria impossível que esta fosse riscada por isolar casas brancas
-function ajudaIsolada called 14 returned 100% blocks executed 100%
-       14:  264:void ajudaIsolada (Estado *e) {
+function ajudaIsolada called 37 returned 100% blocks executed 100%
+       37:  264:void ajudaIsolada (Estado *e) {
         -:  265:
-       52:  266:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 38
-branch  1 taken 14 (fallthrough)
-      144:  267:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 106
-branch  1 taken 38 (fallthrough)
-      106:  268:            if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
-branch  0 taken 37 (fallthrough)
-branch  1 taken 69
-       37:  269:                char charAntigo = e->tabuleiro[i][j]; // guarda a letra
-       37:  270:                e->tabuleiro[i][j] = '#'; // converte para maiuscula
+      133:  266:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 96
+branch  1 taken 37 (fallthrough)
+      354:  267:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 258
+branch  1 taken 96 (fallthrough)
+      258:  268:            if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
+branch  0 taken 88 (fallthrough)
+branch  1 taken 170
+       88:  269:                char charAntigo = e->tabuleiro[i][j]; // guarda a letra
+       88:  270:                e->tabuleiro[i][j] = '#'; // converte para maiuscula
         -:  271:
-       37:  272:                int visitadas[e->linhas][e->colunas];
-      145:  273:                for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 108
-branch  1 taken 37
-      426:  274:                    for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 318
-branch  1 taken 108 (fallthrough)
-      318:  275:                        visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
+       88:  272:                int visitadas[e->linhas][e->colunas];
+      336:  273:                for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 248
+branch  1 taken 88
+      960:  274:                    for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 712
+branch  1 taken 248 (fallthrough)
+      712:  275:                        visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
         -:  276:                    }
         -:  277:                }
         -:  278:
         -:  279:                int contadorLetras = 0;
         -:  280:                int linha = 0, coluna = 0;
-      145:  281:                for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 108
-branch  1 taken 37 (fallthrough)
-      426:  282:                    for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 318
-branch  1 taken 108 (fallthrough)
-      318:  283:                        if (e->tabuleiro[i][j] != '#') { // se for uma letra
-branch  0 taken 260 (fallthrough)
-branch  1 taken 58
-      260:  284:                            linha = i; coluna = j; // guarda a posição de uma letra para comparar depois
-      260:  285:                            contadorLetras++;
+      336:  281:                for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 248
+branch  1 taken 88 (fallthrough)
+      960:  282:                    for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 712
+branch  1 taken 248 (fallthrough)
+      712:  283:                        if (e->tabuleiro[i][j] != '#') { // se for uma letra
+branch  0 taken 572 (fallthrough)
+branch  1 taken 140
+      572:  284:                            linha = i; coluna = j; // guarda a posição de uma letra para comparar depois
+      572:  285:                            contadorLetras++;
         -:  286:                        }
         -:  287:                    }
         -:  288:                }
-       37:  289:                if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
-call    0 returned 37
-branch  1 taken 8 (fallthrough)
-branch  2 taken 29
-        8:  290:                    e->tabuleiro[i][j] = toupper(charAntigo); // letra tem que ser pintada de branco
+       88:  289:                if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
+call    0 returned 88
+branch  1 taken 20 (fallthrough)
+branch  2 taken 68
+       20:  290:                    e->tabuleiro[i][j] = toupper(charAntigo); // letra tem que ser pintada de branco
         -:  291:                }
         -:  292:                else {
-       29:  293:                    e->tabuleiro[i][j] = charAntigo; // volta a letra original
+       68:  293:                    e->tabuleiro[i][j] = charAntigo; // volta a letra original
         -:  294:                }
         -:  295:            }
         -:  296:        }
         -:  297:    }
-       14:  298:}
+       37:  298:}
         -:  299:
-function cmdAjudar called 20 returned 100% blocks executed 97%
-       20:  300:bool cmdAjudar(char cmd, char *arg, Estado *e) {
-       20:  301:    if (cmd == 'a' && arg == NULL && e->carregouTabuleiro == true) {
-branch  0 taken 19 (fallthrough)
-branch  1 taken 1
-branch  2 taken 18 (fallthrough)
-branch  3 taken 1
+function cmdAjudar called 50 returned 100% blocks executed 100%
+       50:  300:bool cmdAjudar(char cmd, char *arg, Estado *e) {
+       50:  301:    if (cmd == 'a' && arg == NULL && e->carregouTabuleiro == true) {
+branch  0 taken 48 (fallthrough)
+branch  1 taken 2
+branch  2 taken 46 (fallthrough)
+branch  3 taken 2
         -:  302:
-       18:  303:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer as alterações)
-branch  0 taken 4 (fallthrough)
-branch  1 taken 14
-call    2 returned 4
+       46:  303:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer as alterações)
+branch  0 taken 8 (fallthrough)
+branch  1 taken 38
+call    2 returned 8
         -:  304:
-       18:  305:        bool ePrintarAntes = e->printar; // guarda o estado atual da flag
+       46:  305:        bool ePrintarAntes = e->printar; // guarda o estado atual da flag
         -:  306:
         -:  307:        // se tiver infrações não ajuda porque pode piorar
-       18:  308:        e->printar = false; // desativa a flag para não printar enquanto executar o cmd 'v'
-       18:  309:        cmdVerificarRestricoes('v', NULL, e);
-call    0 returned 18
-       18:  310:        e->printar = ePrintarAntes;
+       46:  308:        e->printar = false; // desativa a flag para não printar enquanto executar o cmd 'v'
+       46:  309:        cmdVerificarRestricoes('v', NULL, e);
+call    0 returned 46
+       46:  310:        e->printar = ePrintarAntes;
         -:  311:
-       18:  312:        if (e->temInfracoes == true){
-branch  0 taken 4 (fallthrough)
-branch  1 taken 14
-        4:  313:            if (e->printar == true) printf("\nO tabuleiro apresenta infrações, logo não é possível ajudar.\n");
+       46:  312:        if (e->temInfracoes == true){
+branch  0 taken 9 (fallthrough)
+branch  1 taken 37
+        9:  313:            if (e->printar == true) printf("\nO tabuleiro apresenta infrações, logo não é possível ajudar.\n");
 branch  0 taken 1 (fallthrough)
-branch  1 taken 3
+branch  1 taken 8
 call    2 returned 1
         -:  314:            // desfaz o guardarEstado do inicio já que nada mudou (se este foi executado)
-        4:  315:            if (e->guardarEstados == true) {
+        9:  315:            if (e->guardarEstados == true) {
 branch  0 taken 1 (fallthrough)
-branch  1 taken 3
+branch  1 taken 8
         1:  316:                cmdUndo('d', NULL, e);
 call    0 returned 1
         -:  317:            }
-        4:  318:            return true;
+        9:  318:            return true;
         -:  319:        }
         -:  320:
         -:  321:        // riscar todas as letras iguais a uma letra branca na mesma linha e/ou coluna
-       52:  322:        for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 38
-branch  1 taken 14
-      144:  323:            for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 106
-branch  1 taken 38 (fallthrough)
-      106:  324:                if (e->tabuleiro[i][j] >= 'A' && e->tabuleiro[i][j] <= 'Z') { // Casa branca
-branch  0 taken 38
-branch  1 taken 68
+      133:  322:        for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 96
+branch  1 taken 37
+      354:  323:            for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 258
+branch  1 taken 96 (fallthrough)
+      258:  324:                if (e->tabuleiro[i][j] >= 'A' && e->tabuleiro[i][j] <= 'Z') { // Casa branca
+branch  0 taken 87
+branch  1 taken 171
         -:  325:                    char letra = e->tabuleiro[i][j];
         -:  326:
         -:  327:                    // percorrer a linha
-      147:  328:                    for (int k = 0; k < e->colunas; k++) {
-branch  0 taken 109
-branch  1 taken 38
-      109:  329:                        if (k != j && (e->tabuleiro[i][k] == letra || e->tabuleiro[i][k] == tolower(letra))) {
-branch  0 taken 71 (fallthrough)
-branch  1 taken 38
-branch  2 taken 71 (fallthrough)
+      329:  328:                    for (int k = 0; k < e->colunas; k++) {
+branch  0 taken 242
+branch  1 taken 87
+      242:  329:                        if (k != j && (e->tabuleiro[i][k] == letra || e->tabuleiro[i][k] == tolower(letra))) {
+branch  0 taken 155 (fallthrough)
+branch  1 taken 87
+branch  2 taken 155 (fallthrough)
 branch  3 taken 0
-branch  4 taken 3 (fallthrough)
-branch  5 taken 68
-        3:  330:                            e->tabuleiro[i][k] = '#'; // riscar
+branch  4 taken 9 (fallthrough)
+branch  5 taken 146
+        9:  330:                            e->tabuleiro[i][k] = '#'; // riscar
         -:  331:                        }
         -:  332:                    }
         -:  333:
         -:  334:                    // percorrer a coluna
-      147:  335:                    for (int k = 0; k < e->linhas; k++) {
-branch  0 taken 109
-branch  1 taken 38 (fallthrough)
-      109:  336:                        if (k != i && (e->tabuleiro[k][j] == letra || e->tabuleiro[k][j] == tolower(letra))) {
-branch  0 taken 71 (fallthrough)
-branch  1 taken 38
-branch  2 taken 71 (fallthrough)
+      329:  335:                    for (int k = 0; k < e->linhas; k++) {
+branch  0 taken 242
+branch  1 taken 87 (fallthrough)
+      242:  336:                        if (k != i && (e->tabuleiro[k][j] == letra || e->tabuleiro[k][j] == tolower(letra))) {
+branch  0 taken 155 (fallthrough)
+branch  1 taken 87
+branch  2 taken 155 (fallthrough)
 branch  3 taken 0
-branch  4 taken 3 (fallthrough)
-branch  5 taken 68
-        3:  337:                            e->tabuleiro[k][j] = '#'; // riscar
+branch  4 taken 10 (fallthrough)
+branch  5 taken 145
+       10:  337:                            e->tabuleiro[k][j] = '#'; // riscar
         -:  338:                        }
         -:  339:                    }
         -:  340:                }
@@ -619,256 +619,256 @@ branch  5 taken 68
         -:  342:        }
         -:  343:
         -:  344:        // pintar de branco todas as letras que sao vizinhas de um #
-       52:  345:        for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 38
-branch  1 taken 14 (fallthrough)
-      144:  346:            for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 106
-branch  1 taken 38 (fallthrough)
-      106:  347:                if (e->tabuleiro[i][j] == '#') { // casa riscada
-branch  0 taken 16 (fallthrough)
-branch  1 taken 90
-       16:  348:                    if (i > 0 && e->tabuleiro[i-1][j] >= 'a' && e->tabuleiro[i-1][j] <= 'z') { // cima
-branch  0 taken 9 (fallthrough)
-branch  1 taken 7
-branch  2 taken 3 (fallthrough)
-branch  3 taken 6
-branch  4 taken 3 (fallthrough)
+      133:  345:        for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 96
+branch  1 taken 37 (fallthrough)
+      354:  346:            for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 258
+branch  1 taken 96 (fallthrough)
+      258:  347:                if (e->tabuleiro[i][j] == '#') { // casa riscada
+branch  0 taken 42 (fallthrough)
+branch  1 taken 216
+       42:  348:                    if (i > 0 && e->tabuleiro[i-1][j] >= 'a' && e->tabuleiro[i-1][j] <= 'z') { // cima
+branch  0 taken 23 (fallthrough)
+branch  1 taken 19
+branch  2 taken 6 (fallthrough)
+branch  3 taken 17
+branch  4 taken 6 (fallthrough)
 branch  5 taken 0
-        3:  349:                        e->tabuleiro[i-1][j] = toupper(e->tabuleiro[i-1][j]);
+        6:  349:                        e->tabuleiro[i-1][j] = toupper(e->tabuleiro[i-1][j]);
         -:  350:                    }
-       16:  351:                    if (i < e->linhas - 1 && e->tabuleiro[i+1][j] >= 'a' && e->tabuleiro[i+1][j] <= 'z') { // baixo
-branch  0 taken 7 (fallthrough)
-branch  1 taken 9
-branch  2 taken 3 (fallthrough)
-branch  3 taken 4
-branch  4 taken 3 (fallthrough)
-branch  5 taken 0
-        3:  352:                        e->tabuleiro[i+1][j] = toupper(e->tabuleiro[i+1][j]);
-        -:  353:                    }
-       16:  354:                    if (j > 0 && e->tabuleiro[i][j-1] >= 'a' && e->tabuleiro[i][j-1] <= 'z') { // esquerda
-branch  0 taken 14 (fallthrough)
-branch  1 taken 2
-branch  2 taken 5 (fallthrough)
+       42:  351:                    if (i < e->linhas - 1 && e->tabuleiro[i+1][j] >= 'a' && e->tabuleiro[i+1][j] <= 'z') { // baixo
+branch  0 taken 19 (fallthrough)
+branch  1 taken 23
+branch  2 taken 10 (fallthrough)
 branch  3 taken 9
-branch  4 taken 5 (fallthrough)
+branch  4 taken 10 (fallthrough)
 branch  5 taken 0
-        5:  355:                        e->tabuleiro[i][j-1] = toupper(e->tabuleiro[i][j-1]);
+       10:  352:                        e->tabuleiro[i+1][j] = toupper(e->tabuleiro[i+1][j]);
+        -:  353:                    }
+       42:  354:                    if (j > 0 && e->tabuleiro[i][j-1] >= 'a' && e->tabuleiro[i][j-1] <= 'z') { // esquerda
+branch  0 taken 30 (fallthrough)
+branch  1 taken 12
+branch  2 taken 9 (fallthrough)
+branch  3 taken 21
+branch  4 taken 9 (fallthrough)
+branch  5 taken 0
+        9:  355:                        e->tabuleiro[i][j-1] = toupper(e->tabuleiro[i][j-1]);
         -:  356:                    }
-       16:  357:                    if (j < e->colunas - 1 && e->tabuleiro[i][j+1] >= 'a' && e->tabuleiro[i][j+1] <= 'z') { // direita
-branch  0 taken 9 (fallthrough)
-branch  1 taken 7
-branch  2 taken 4 (fallthrough)
-branch  3 taken 5
-branch  4 taken 4 (fallthrough)
+       42:  357:                    if (j < e->colunas - 1 && e->tabuleiro[i][j+1] >= 'a' && e->tabuleiro[i][j+1] <= 'z') { // direita
+branch  0 taken 28 (fallthrough)
+branch  1 taken 14
+branch  2 taken 16 (fallthrough)
+branch  3 taken 12
+branch  4 taken 16 (fallthrough)
 branch  5 taken 0
-        4:  358:                        e->tabuleiro[i][j+1] = toupper(e->tabuleiro[i][j+1]);
+       16:  358:                        e->tabuleiro[i][j+1] = toupper(e->tabuleiro[i][j+1]);
         -:  359:                    }
         -:  360:                }
         -:  361:            }
         -:  362:        }
         -:  363:
         -:  364:        // pinta de branco uma casa quando seria impossivel que esta fosse riscada
-       14:  365:        ajudaIsolada(e);
-call    0 returned 14
+       37:  365:        ajudaIsolada(e);
+call    0 returned 37
         -:  366:        
-       14:  367:        if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações (se for chamado pelo 'A' não é necessário)
-branch  0 taken 3 (fallthrough)
-branch  1 taken 11
+       37:  367:        if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações (se for chamado pelo 'A' não é necessário)
+branch  0 taken 7 (fallthrough)
+branch  1 taken 30
         -:  368:
-        3:  369:            if (comparaTabuleiros(e, e->ultimoEstado) == false) { // se o tabuleiro foi alterado
-call    0 returned 3
-branch  1 taken 2 (fallthrough)
-branch  2 taken 1
-        2:  370:                e->printar = false;
-        2:  371:                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
-call    0 returned 2
-        2:  372:                e->printar = ePrintarAntes; // restaura o estado da flag
+        7:  369:            if (comparaTabuleiros(e, e->ultimoEstado) == false) { // se o tabuleiro foi alterado
+call    0 returned 7
+branch  1 taken 5 (fallthrough)
+branch  2 taken 2
+        5:  370:                e->printar = false;
+        5:  371:                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
+call    0 returned 5
+        5:  372:                e->printar = ePrintarAntes; // restaura o estado da flag
         -:  373:                
-        2:  374:                if (e->temInfracoes == true) { // se o tabuleiro ficou inválido
-branch  0 taken 0 (fallthrough)
-branch  1 taken 2
-    #####:  375:                    printf("\nNão é possível ajudar nestas condições!\n");
-call    0 never executed
-    #####:  376:                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
-call    0 never executed
+        5:  374:                if (e->temInfracoes == true) { // se o tabuleiro ficou inválido
+branch  0 taken 1 (fallthrough)
+branch  1 taken 4
+        1:  375:                    printf("\nNão é possível ajudar nestas condições!\n");
+call    0 returned 1
+        1:  376:                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
+call    0 returned 1
         -:  377:                }
         -:  378:
         -:  379:                else {
-        2:  380:                    if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
-branch  0 taken 2 (fallthrough)
+        4:  380:                    if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
+branch  0 taken 4 (fallthrough)
 branch  1 taken 0
-call    2 returned 2
+call    2 returned 4
         -:  381:                }
         -:  382:            }
         -:  383:
         -:  384:            else {
-        1:  385:                if (e->printar == true) printf("\nNenhuma dica encontrada.\n");
-branch  0 taken 1 (fallthrough)
+        2:  385:                if (e->printar == true) printf("\nNenhuma dica encontrada.\n");
+branch  0 taken 2 (fallthrough)
 branch  1 taken 0
-call    2 returned 1
-        1:  386:                cmdUndo('d', NULL, e); // desfaz o guardarEstado do inicio já que nada mudou
-call    0 returned 1
+call    2 returned 2
+        2:  386:                cmdUndo('d', NULL, e); // desfaz o guardarEstado do inicio já que nada mudou
+call    0 returned 2
         -:  387:            }
         -:  388:
         -:  389:        }
         -:  390:
-       14:  391:        return true;
+       37:  391:        return true;
         -:  392:    }
         -:  393:    return false;
         -:  394:}
         -:  395:
-function cmdA called 10 returned 100% blocks executed 79%
-       10:  396:bool cmdA (char cmd, char *arg, Estado *e) {
-       10:  397:    if (cmd == 'A' && arg == NULL && e->carregouTabuleiro == true) {
-branch  0 taken 9 (fallthrough)
-branch  1 taken 1
-branch  2 taken 8 (fallthrough)
-branch  3 taken 1
+function cmdA called 28 returned 100% blocks executed 100%
+       28:  396:bool cmdA (char cmd, char *arg, Estado *e) {
+       28:  397:    if (cmd == 'A' && arg == NULL && e->carregouTabuleiro == true) {
+branch  0 taken 26 (fallthrough)
+branch  1 taken 2
+branch  2 taken 24 (fallthrough)
+branch  3 taken 2
         -:  398:
         -:  399:        // guarda estado se não tiver sido chamado pela função resolver
-        8:  400:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
-branch  0 taken 1 (fallthrough)
-branch  1 taken 7
-call    2 returned 1
+       24:  400:        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
+branch  0 taken 6 (fallthrough)
+branch  1 taken 18
+call    2 returned 6
         -:  401:
-        8:  402:        bool flagGuardarAntes = e->guardarEstados; // guarda o estado atual da flag
-        8:  403:        bool flagPrintarAntes = e->printar;
+       24:  402:        bool flagGuardarAntes = e->guardarEstados; // guarda o estado atual da flag
+       24:  403:        bool flagPrintarAntes = e->printar;
         -:  404:
-        8:  405:        e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar o cmd 'a'
-        8:  406:        e->printar = false;
+       24:  405:        e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar o cmd 'a'
+       24:  406:        e->printar = false;
         -:  407:
-        8:  408:        Estado estadoAnterior;
-call    0 returned 8
-        8:  409:        memcpy(&estadoAnterior, e, sizeof(Estado)); // copia o estado atual para comparação posterior
+       24:  408:        Estado estadoAnterior;
+call    0 returned 24
+       24:  409:        memcpy(&estadoAnterior, e, sizeof(Estado)); // copia o estado atual para comparação posterior
         -:  410:
-        8:  411:        bool flagContinuar = true; // flag para continuar a correr o loop
-        8:  412:        bool houveMudancasInicio = false; // flag para verificar se houve mudanças no tabuleiro desde que o comando A foi chamado
+       24:  411:        bool flagContinuar = true; // flag para continuar a correr o loop
+       24:  412:        bool houveMudancasInicio = false; // flag para verificar se houve mudanças no tabuleiro desde que o comando A foi chamado
         -:  413:
-        8:  414:        while (flagContinuar == true) {
-       14:  415:            cmdAjudar('a', NULL, e); // faz a ajuda
-call    0 returned 14
+       24:  414:        while (flagContinuar == true) {
+       38:  415:            cmdAjudar('a', NULL, e); // faz a ajuda
+call    0 returned 38
         -:  416:
-       14:  417:            if (comparaTabuleiros(e, &estadoAnterior)) { // se forem iguais
-call    0 returned 14
-branch  1 taken 8
-branch  2 taken 6
+       38:  417:            if (comparaTabuleiros(e, &estadoAnterior)) { // se forem iguais
+call    0 returned 38
+branch  1 taken 22
+branch  2 taken 16
         -:  418:                flagContinuar = false; // para o loop (n houve mudanças)
         -:  419:            }
         -:  420:
         -:  421:            else {
         -:  422:
-        6:  423:                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
-call    0 returned 6
+       16:  423:                cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro continua válido
+call    0 returned 16
         -:  424:
-        6:  425:                if (e->temInfracoes == true && flagGuardarAntes == true) { // se o tabuleiro ficou inválido e o comando 'A' não foi chamado pelo 'R'
-branch  0 taken 2 (fallthrough)
-branch  1 taken 4
-branch  2 taken 0 (fallthrough)
-branch  3 taken 2
-    #####:  426:                    e->printar = flagPrintarAntes; // restaura o estado da flag
-    #####:  427:                    e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
+       16:  425:                if (e->temInfracoes == true && flagGuardarAntes == true) { // se o tabuleiro ficou inválido e o comando 'A' não foi chamado pelo 'R'
+branch  0 taken 8 (fallthrough)
+branch  1 taken 8
+branch  2 taken 2 (fallthrough)
+branch  3 taken 6
+        2:  426:                    e->printar = flagPrintarAntes; // restaura o estado da flag
+        2:  427:                    e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
         -:  428:
-    #####:  429:                    if (e->printar == true) printf("\nNão é possível ajudar nestas condições!\n");
-branch  0 never executed (fallthrough)
-branch  1 never executed
-call    2 never executed
-    #####:  430:                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
-    #####:  431:                    return true;
-call    0 never executed
+        2:  429:                    if (e->printar == true) printf("\nNão é possível ajudar nestas condições!\n");
+branch  0 taken 2 (fallthrough)
+branch  1 taken 0
+call    2 returned 2
+        2:  430:                    cmdUndo('d', NULL, e); // volta para o tabuleiro inicial
+        2:  431:                    return true;
+call    0 returned 2
         -:  432:                }
         -:  433:
         -:  434:                // se o tabuleiro foi alterado e não tem infrações
-        6:  435:                houveMudancasInicio = true;
-        6:  436:                memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
+       14:  435:                houveMudancasInicio = true;
+       14:  436:                memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
         -:  437:
         -:  438:            }
         -:  439:        }
         -:  440:
-        8:  441:        if (houveMudancasInicio == false && flagGuardarAntes == true) {
-branch  0 taken 0
-branch  1 taken 8
+       22:  441:        if (houveMudancasInicio == false && flagGuardarAntes == true) {
+branch  0 taken 2
+branch  1 taken 20
         -:  442:            // se não houve mudancas e a flag de guardar estados estava ativa, desfaz o guardarEstado do inicio ja que nada mudou
-    #####:  443:            cmdUndo('d', NULL, e);
-call    0 never executed
+        2:  443:            cmdUndo('d', NULL, e);
+call    0 returned 2
         -:  444:        }
         -:  445:
-        8:  446:        e->printar = flagPrintarAntes;
-       8*:  447:        if (e->printar == true && houveMudancasInicio == false) printf("\nNenhuma dica encontrada.\n");
-branch  0 taken 1 (fallthrough)
-branch  1 taken 7
-branch  2 taken 0 (fallthrough)
-branch  3 taken 1
-call    4 never executed
-        8:  448:        if (e->printar == true && houveMudancasInicio == true) printf("\nO comando A foi executado com sucesso!\n");
-branch  0 taken 1 (fallthrough)
-branch  1 taken 7
-branch  2 taken 1 (fallthrough)
-branch  3 taken 0
-call    4 returned 1
-        8:  449:        e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
-        8:  450:        return true;
+       22:  446:        e->printar = flagPrintarAntes;
+       22:  447:        if (e->printar == true && houveMudancasInicio == false) printf("\nNenhuma dica encontrada.\n");
+branch  0 taken 4 (fallthrough)
+branch  1 taken 18
+branch  2 taken 2 (fallthrough)
+branch  3 taken 2
+call    4 returned 2
+       22:  448:        if (e->printar == true && houveMudancasInicio == true) printf("\nO comando A foi executado com sucesso!\n");
+branch  0 taken 4 (fallthrough)
+branch  1 taken 18
+branch  2 taken 2 (fallthrough)
+branch  3 taken 2
+call    4 returned 2
+       22:  449:        e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
+       22:  450:        return true;
         -:  451:    }
         -:  452:    return false;
         -:  453:}
         -:  454:
-function resolverTabuleiro called 7 returned 100% blocks executed 94%
-        7:  455:int resolverTabuleiro(Estado *e) {
+function resolverTabuleiro called 18 returned 100% blocks executed 100%
+       18:  455:int resolverTabuleiro(Estado *e) {
         -:  456:
-        7:  457:    cmdA('A', NULL, e); // atualiza o tabuleiro com todas as dicas possiveis de deduzir
-call    0 returned 7
-        7:  458:    if (tabuleiroResolvido (e) == 1) return 1; // se esta resolvido retorna 1
-call    0 returned 7
-branch  1 taken 6 (fallthrough)
-branch  2 taken 1
-        6:  459:    if (tabuleiroResolvido (e) == 0) return 0; // se não pode ser resolvido retorna 0
-call    0 returned 6
-branch  1 taken 3
-branch  2 taken 3
+       18:  457:    cmdA('A', NULL, e); // atualiza o tabuleiro com todas as dicas possiveis de deduzir
+call    0 returned 18
+       18:  458:    if (tabuleiroResolvido (e) == 1) return 1; // se esta resolvido retorna 1
+call    0 returned 18
+branch  1 taken 16 (fallthrough)
+branch  2 taken 2
+       16:  459:    if (tabuleiroResolvido (e) == 0) return 0; // se não pode ser resolvido retorna 0
+call    0 returned 16
+branch  1 taken 8
+branch  2 taken 8
         -:  460:    
         -:  461:    // tem letras minusculas ainda
         -:  462:
-        5:  463:        for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 5
+       12:  463:        for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 12
 branch  1 taken 0 (fallthrough)
-       12:  464:            for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 10
-branch  1 taken 2 (fallthrough)
-       10:  465:                if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
-branch  0 taken 3 (fallthrough)
-branch  1 taken 7
+       26:  464:            for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 22
+branch  1 taken 4 (fallthrough)
+       22:  465:                if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
+branch  0 taken 8 (fallthrough)
+branch  1 taken 14
         -:  466:
         -:  467:                    // backup do estado
-        3:  468:                    Estado estadoBackup;
-call    0 returned 3
-        3:  469:                    memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
-call    0 returned 3
+        8:  468:                    Estado estadoBackup;
+call    0 returned 8
+        8:  469:                    memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
+call    0 returned 8
         -:  470:
         -:  471:                    // tenta pintar
-        3:  472:                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]);
-        3:  473:                    int resultado = resolverTabuleiro(e);
-call    0 returned 3
-        3:  474:                    if (resultado == 1) return 1;
-branch  0 taken 1 (fallthrough)
-branch  1 taken 2
+        8:  472:                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]);
+        8:  473:                    int resultado = resolverTabuleiro(e);
+call    0 returned 8
+        8:  474:                    if (resultado == 1) return 1;
+branch  0 taken 4 (fallthrough)
+branch  1 taken 4
         -:  475:
         -:  476:                    // volta ao estado anterior
-        1:  477:                    memcpy(e, &estadoBackup, sizeof(Estado));
-call    0 returned 1
+        4:  477:                    memcpy(e, &estadoBackup, sizeof(Estado));
+call    0 returned 4
         -:  478:
         -:  479:                    // tenta riscar
-        1:  480:                    e->tabuleiro[i][j] = '#';
-        1:  481:                    e->temInfracoes = false; // reseta flag
-        1:  482:                    resultado = resolverTabuleiro(e);
-call    0 returned 1
-        1:  483:                    if (resultado == 1) return 1;
-branch  0 taken 0 (fallthrough)
-branch  1 taken 1
+        4:  480:                    e->tabuleiro[i][j] = '#';
+        4:  481:                    e->temInfracoes = false; // reseta flag
+        4:  482:                    resultado = resolverTabuleiro(e);
+call    0 returned 4
+        4:  483:                    if (resultado == 1) return 1;
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
         -:  484:
         -:  485:                    // volta ao estado original de novo
-    #####:  486:                    memcpy(e, &estadoBackup, sizeof(Estado));
+        2:  486:                    memcpy(e, &estadoBackup, sizeof(Estado));
         -:  487:
-    #####:  488:                    return 0;
+        2:  488:                    return 0;
         -:  489:                }
         -:  490:            }
         -:  491:        }
@@ -876,89 +876,89 @@ branch  1 taken 1
         -:  493:    return 0;
         -:  494:}
         -:  495:
-function cmdResolver called 6 returned 100% blocks executed 100%
-        6:  496:bool cmdResolver(char cmd, char *arg, Estado *e) {
-        6:  497:    if (cmd == 'R' && arg == NULL && e->carregouTabuleiro == true) {
-branch  0 taken 5 (fallthrough)
-branch  1 taken 1
-branch  2 taken 4 (fallthrough)
-branch  3 taken 1
+function cmdResolver called 12 returned 100% blocks executed 100%
+       12:  496:bool cmdResolver(char cmd, char *arg, Estado *e) {
+       12:  497:    if (cmd == 'R' && arg == NULL && e->carregouTabuleiro == true) {
+branch  0 taken 10 (fallthrough)
+branch  1 taken 2
+branch  2 taken 8 (fallthrough)
+branch  3 taken 2
         -:  498:
-        4:  499:        if (tabuleiroResolvido(e) == 1) { // se o tabuleiro já estiver resolvido
-call    0 returned 4
-branch  1 taken 1 (fallthrough)
-branch  2 taken 3
-        1:  500:            printf("\nO tabuleiro já está resolvido!\n");
-call    0 returned 1
-        1:  501:            return true;
-call    0 returned 1
+        8:  499:        if (tabuleiroResolvido(e) == 1) { // se o tabuleiro já estiver resolvido
+call    0 returned 8
+branch  1 taken 2 (fallthrough)
+branch  2 taken 6
+        2:  500:            printf("\nO tabuleiro já está resolvido!\n");
+call    0 returned 2
+        2:  501:            return true;
+call    0 returned 2
         -:  502:        }
         -:  503:
         -:  504:        // guarda o estado atual antes de começar a resolver
-        3:  505:        guardarEstado(e);
-call    0 returned 3
+        6:  505:        guardarEstado(e);
+call    0 returned 6
         -:  506:
-        3:  507:        e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar os cmds
-        3:  508:        e->printar = false; // desativa a flag de printar
+        6:  507:        e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar os cmds
+        6:  508:        e->printar = false; // desativa a flag de printar
         -:  509:
-        3:  510:        int resultado = resolverTabuleiro(e); // chama a função para resolver o tabuleiro
-call    0 returned 3
+        6:  510:        int resultado = resolverTabuleiro(e); // chama a função para resolver o tabuleiro
+call    0 returned 6
         -:  511:
-        3:  512:        e->guardarEstados = true; // reativa a flag de guardar estados
-        3:  513:        e->printar = true; // reativa a flag de printar
+        6:  512:        e->guardarEstados = true; // reativa a flag de guardar estados
+        6:  513:        e->printar = true; // reativa a flag de printar
         -:  514:
-        3:  515:        if (resultado == 0) { // se não pode ser resolvido
-branch  0 taken 2 (fallthrough)
-branch  1 taken 1
-        2:  516:            printf("\nAviso: O tabuleiro não pode ser resolvido.\n");
-call    0 returned 2
-        2:  517:            cmdUndo('d', NULL, e); // volta ao estado anterior
-        2:  518:            return true;
-call    0 returned 2
+        6:  515:        if (resultado == 0) { // se não pode ser resolvido
+branch  0 taken 4 (fallthrough)
+branch  1 taken 2
+        4:  516:            printf("\nAviso: O tabuleiro não pode ser resolvido.\n");
+call    0 returned 4
+        4:  517:            cmdUndo('d', NULL, e); // volta ao estado anterior
+        4:  518:            return true;
+call    0 returned 4
         -:  519:        }
         -:  520:        else {
-        1:  521:            printf("\nO tabuleiro está resolvido!\n");
-call    0 returned 1
+        2:  521:            printf("\nO tabuleiro está resolvido!\n");
+call    0 returned 2
         -:  522:        }
         -:  523:
-        1:  524:        return true;
-call    0 returned 1
+        2:  524:        return true;
+call    0 returned 2
         -:  525:    }
         -:  526:    return false;
         -:  527:}
         -:  528:
-function cmdHelp called 2 returned 100% blocks executed 100%
-        2:  529:bool cmdHelp(char cmd, char *arg, Estado *e) {
-        2:  530:    (void)e; // p/ n dar warning de variavel não utilizada
-        2:  531:    if (cmd == 'h' && arg == NULL) {
-branch  0 taken 1 (fallthrough)
-branch  1 taken 1
-        1:  532:        printf("\nComandos disponíveis:\n");
-call    0 returned 1
-        1:  533:        printf("l [ficheiro] - Carregar tabuleiro\n");
-call    0 returned 1
-        1:  534:        printf("g [ficheiro] - Gravar tabuleiro\n");
-call    0 returned 1
-        1:  535:        printf("b [coluna][linha] - Pintar célula\n");
-call    0 returned 1
-        1:  536:        printf("r [coluna][linha] - Riscar célula\n");
-call    0 returned 1
-        1:  537:        printf("d - Desfazer a última ação\n");
-call    0 returned 1
-        1:  538:        printf("v - Verificar se há infrações no tabuleiro\n");
-call    0 returned 1
-        1:  539:        printf("a - Aplicar dicas ao tabuleiro\n");
-call    0 returned 1
-        1:  540:        printf("A - Aplicar dicas ao tabuleiro até não haver mais alterações\n");
-call    0 returned 1
-        1:  541:        printf("R - Resolver o tabuleiro\n");
-call    0 returned 1
-        1:  542:        printf("h - Mostrar ajuda\n");
-call    0 returned 1
-        1:  543:        printf("s - Sair do programa\n");
-call    0 returned 1
-        1:  544:        return true;
-call    0 returned 1
+function cmdHelp called 4 returned 100% blocks executed 100%
+        4:  529:bool cmdHelp(char cmd, char *arg, Estado *e) {
+        4:  530:    (void)e; // p/ n dar warning de variavel não utilizada
+        4:  531:    if (cmd == 'h' && arg == NULL) {
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
+        2:  532:        printf("\nComandos disponíveis:\n");
+call    0 returned 2
+        2:  533:        printf("l [ficheiro] - Carregar tabuleiro\n");
+call    0 returned 2
+        2:  534:        printf("g [ficheiro] - Gravar tabuleiro\n");
+call    0 returned 2
+        2:  535:        printf("b [coluna][linha] - Pintar célula\n");
+call    0 returned 2
+        2:  536:        printf("r [coluna][linha] - Riscar célula\n");
+call    0 returned 2
+        2:  537:        printf("d - Desfazer a última ação\n");
+call    0 returned 2
+        2:  538:        printf("v - Verificar se há infrações no tabuleiro\n");
+call    0 returned 2
+        2:  539:        printf("a - Aplicar dicas ao tabuleiro\n");
+call    0 returned 2
+        2:  540:        printf("A - Aplicar dicas ao tabuleiro até não haver mais alterações\n");
+call    0 returned 2
+        2:  541:        printf("R - Resolver o tabuleiro\n");
+call    0 returned 2
+        2:  542:        printf("h - Mostrar ajuda\n");
+call    0 returned 2
+        2:  543:        printf("s - Sair do programa\n");
+call    0 returned 2
+        2:  544:        return true;
+call    0 returned 2
         -:  545:    }
         -:  546:    return false;
         -:  547:}

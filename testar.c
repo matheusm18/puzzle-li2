@@ -3,24 +3,34 @@
 #include "comandos.h"
 
 void testar_cmdLer_valido() {
-    Estado e = {0};
-    e.printar = true;
+    Estado *e = malloc(sizeof(Estado));
+    memset(e, 0, sizeof(Estado));
+
+    e->carregouTabuleiro = true;
+    e->guardarEstados = true;
+    e->printar = true;
+    e->linhas = 2; e->colunas = 2;
+
+    e->tabuleiro[0][0] = 'A'; e->tabuleiro[0][1] = '#';
+    e->tabuleiro[1][0] = '#'; e->tabuleiro[1][1] = 'B';
+
     FILE *file = fopen("lerValido.txt", "w"); // modo write cria o arquivo se n existir, se existir escreve por cima
     fprintf(file, "2 2\nab\ncd\n");
     fclose(file);
 
-    CU_ASSERT_TRUE(cmdLer('l', "lerValido.txt", &e));
+    CU_ASSERT_TRUE(cmdLer('l', "lerValido.txt", e));
 
-    CU_ASSERT_TRUE(e.carregouTabuleiro);
-    CU_ASSERT_TRUE(e.deuAviso);
-    CU_ASSERT_EQUAL(e.linhas, 2);
-    CU_ASSERT_EQUAL(e.colunas, 2);
-    CU_ASSERT_EQUAL(e.tabuleiro[0][0], 'a');
-    CU_ASSERT_EQUAL(e.tabuleiro[0][1], 'b');
-    CU_ASSERT_EQUAL(e.tabuleiro[1][0], 'c');
-    CU_ASSERT_EQUAL(e.tabuleiro[1][1], 'd');
+    CU_ASSERT_TRUE(e->carregouTabuleiro);
+    CU_ASSERT_TRUE(e->deuAviso);
+    CU_ASSERT_EQUAL(e->linhas, 2);
+    CU_ASSERT_EQUAL(e->colunas, 2);
+    CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'c');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], 'd');
 
     remove("lerValido.txt"); // remover o arquivo apos o teste
+    liberarEstados(e); // liberar a memória alocada
 }
 
 void testar_cmdLer_semArgumento() {
@@ -129,6 +139,8 @@ void testar_cmdPintar_valido() {
     memset(e, 0, sizeof(Estado)); // inicializa o estado com zeros (o tamanho do bloco que sera preenchido é o tamanho do estado)
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     e->tabuleiro[0][0] = 'a';
 
@@ -143,6 +155,8 @@ void testar_cmdPintar_celulaRiscada() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     e->tabuleiro[0][0] = '#';
 
@@ -159,6 +173,8 @@ void testar_cmdPintar_celulaPintada() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     e->tabuleiro[0][0] = 'A';
 
@@ -184,6 +200,8 @@ void testar_cmdPintar_coordsInvalida() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     
     // coordenadas fora do tabuleiro
@@ -198,6 +216,8 @@ void testar_cmdRiscar_valido() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     e->tabuleiro[0][0] = 'a';
 
@@ -212,6 +232,8 @@ void testar_cmdRiscar_celulaRiscada() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
     e->tabuleiro[0][0] = '#';
 
@@ -237,6 +259,8 @@ void testar_cmdRiscar_coordsInvalida() {
     memset(e, 0, sizeof(Estado));
 
     e->carregouTabuleiro = true;
+    e->printar = true;
+    e->guardarEstados = true;
     e->linhas = 2; e->colunas = 2;
 
     CU_ASSERT_FALSE(cmdRiscar('r', "a5", e));
@@ -283,6 +307,7 @@ void testar_cmdVerificar_verifValida() {
     e.carregouTabuleiro = true;
     e.linhas = 2; e.colunas = 2;
     e.printar = true;
+
     e.tabuleiro[0][0] = 'A'; e.tabuleiro[0][1] = 'a';
     e.tabuleiro[1][0] = 'b'; e.tabuleiro[1][1] = 'C';
 
@@ -296,6 +321,7 @@ void testar_cmdVerificar_linhaInvalida() {
     e.carregouTabuleiro = true;
     e.linhas = 2; e.colunas = 2;
     e.printar = true;
+
     e.tabuleiro[0][0] = 'A'; e.tabuleiro[0][1] = 'A';
     e.tabuleiro[1][0] = 'b'; e.tabuleiro[1][1] = 'C';
 
@@ -308,6 +334,7 @@ void testar_cmdVerificar_colunaInvalida() {
     e.carregouTabuleiro = true;
     e.linhas = 2; e.colunas = 2;
     e.printar = true;
+
     e.tabuleiro[0][0] = 'A'; e.tabuleiro[0][1] = 'C';
     e.tabuleiro[1][0] = '#'; e.tabuleiro[1][1] = 'C';
 
@@ -320,6 +347,7 @@ void testar_cmdVerificar_riscadaDireita() {
     e.carregouTabuleiro = true;
     e.linhas = 2; e.colunas = 2;
     e.printar = true;
+
     e.tabuleiro[0][0] = '#'; e.tabuleiro[0][1] = '#';
     e.tabuleiro[1][0] = 'b'; e.tabuleiro[1][1] = 'C';
 
@@ -332,8 +360,22 @@ void testar_cmdVerificar_riscadaBaixo() {
     e.carregouTabuleiro = true;
     e.linhas = 2; e.colunas = 2;
     e.printar = true;
+
     e.tabuleiro[0][0] = '#'; e.tabuleiro[0][1] = 'a';
     e.tabuleiro[1][0] = '#'; e.tabuleiro[1][1] = 'C';
+
+    CU_ASSERT_TRUE(cmdVerificarRestricoes('v', NULL, &e));
+    CU_ASSERT_TRUE(e.temInfracoes);
+}
+
+void testar_cmdVerificar_semCaminho() {
+    Estado e = {0};
+    e.carregouTabuleiro = true;
+    e.linhas = 2; e.colunas = 2;
+    e.printar = true;
+
+    e.tabuleiro[0][0] = 'A'; e.tabuleiro[0][1] = '#';
+    e.tabuleiro[1][0] = '#'; e.tabuleiro[1][1] = 'B';
 
     CU_ASSERT_TRUE(cmdVerificarRestricoes('v', NULL, &e));
     CU_ASSERT_TRUE(e.temInfracoes);
@@ -390,6 +432,29 @@ void testar_cmdAjudar_valido2() {
     liberarEstados(e);
 }
 
+void testar_cmdAjudar_semAlteracoes() {
+    Estado *e = malloc(sizeof(Estado));
+    memset(e, 0, sizeof(Estado));
+
+    e->carregouTabuleiro = true;
+    e->guardarEstados = true;
+    e->printar = true;
+    e->linhas = 2; e->colunas = 2;
+
+    e->tabuleiro[0][0] = 'A'; e->tabuleiro[0][1] = 'D';
+    e->tabuleiro[1][0] = '#'; e->tabuleiro[1][1] = 'B';
+
+
+    CU_ASSERT_TRUE(cmdAjudar('a', NULL, e));
+
+    CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'A');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'D');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][0], '#');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], 'B');
+
+    liberarEstados(e);
+}
+
 void testar_cmdAjudar_comInfracoes() {
     Estado *e = malloc(sizeof(Estado));
     memset(e, 0, sizeof(Estado));
@@ -400,7 +465,7 @@ void testar_cmdAjudar_comInfracoes() {
     e->linhas = 2; e->colunas = 2;
 
     e->tabuleiro[0][0] = 'A'; e->tabuleiro[0][1] = 'A';
-    e->tabuleiro[1][0] = 'm'; e->tabuleiro[1][1] = 'b';
+    e->tabuleiro[1][0] = 'm'; e->tabuleiro[1][1] = '#';
 
 
     CU_ASSERT_TRUE(cmdAjudar('a', NULL, e));
@@ -408,7 +473,7 @@ void testar_cmdAjudar_comInfracoes() {
     CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'A');
     CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'A');
     CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'm');
-    CU_ASSERT_EQUAL(e->tabuleiro[1][1], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], '#');
 
     liberarEstados(e);
 }
@@ -448,6 +513,35 @@ void testar_cmdA_valido() {
     liberarEstados(e);
 }
 
+void testar_cmdA_gerouInfracoes() {
+    Estado *e = malloc(sizeof(Estado));
+    memset(e, 0, sizeof(Estado));
+
+    e->carregouTabuleiro = true;
+    e->guardarEstados = true;
+    e->printar = true;
+    e->linhas = 3; e->colunas = 3;
+
+    e->tabuleiro[0][0] = 'A'; e->tabuleiro[0][1] = 'a'; e->tabuleiro[0][2] = 'b';
+    e->tabuleiro[1][0] = 'c'; e->tabuleiro[1][1] = 'a'; e->tabuleiro[1][2] = 'b';
+    e->tabuleiro[2][0] = 'a'; e->tabuleiro[2][1] = 'b'; e->tabuleiro[2][2] = 'c';
+
+
+    CU_ASSERT_TRUE(cmdA('A', NULL, e));
+
+    CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'A');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][2], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'c');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][2], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[2][0], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[2][1], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[2][2], 'c');
+
+    liberarEstados(e);
+}
+
 void testar_cmdA_semAlteracoes() {
     Estado *e = malloc(sizeof(Estado));
     memset(e, 0, sizeof(Estado));
@@ -461,7 +555,7 @@ void testar_cmdA_semAlteracoes() {
     e->tabuleiro[1][0] = '#'; e->tabuleiro[1][1] = 'B';
 
 
-    CU_ASSERT_TRUE(cmdAjudar('a', NULL, e));
+    CU_ASSERT_TRUE(cmdA('A', NULL, e));
 
     CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'A');
     CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'D');
@@ -537,15 +631,15 @@ void testar_cmdResolver_tabuleiroImpossivel() {
     e->printar = true;
     e->linhas = 2; e->colunas = 2;
 
-    e->tabuleiro[0][0] = 'a'; e->tabuleiro[0][1] = 'a';
-    e->tabuleiro[1][0] = 'b'; e->tabuleiro[1][1] = '#';
+    e->tabuleiro[0][0] = 'a'; e->tabuleiro[0][1] = 'b';
+    e->tabuleiro[1][0] = 'a'; e->tabuleiro[1][1] = 'b';
 
     CU_ASSERT_TRUE(cmdResolver('R', NULL, e));
 
     CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'a');
-    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'a');
-    CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'b');
-    CU_ASSERT_EQUAL(e->tabuleiro[1][1], '#');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'b');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], 'b');
 
     liberarEstados(e);
 }
@@ -630,11 +724,14 @@ int main() {
     CU_add_test(suite, "cmdVerificarRestricoes - Coluna com duas brancas", testar_cmdVerificar_colunaInvalida);
     CU_add_test(suite, "cmdVerificarRestricoes - Casa em baixo riscada", testar_cmdVerificar_riscadaBaixo);
     CU_add_test(suite, "cmdVerificarRestricoes - Casa a direita riscada", testar_cmdVerificar_riscadaDireita);
+    CU_add_test(suite, "cmdVerificarRestricoes - Sem caminho", testar_cmdVerificar_semCaminho);
     CU_add_test(suite, "cmdAjudar - Comando inválido", testar_cmdAjudar_invalido);
     CU_add_test(suite, "cmdAjudar - Comando válido 1", testar_cmdAjudar_valido1);
     CU_add_test(suite, "cmdAjudar - Comando válido 2", testar_cmdAjudar_valido2);
+    CU_add_test(suite, "cmdAjudar - Sem alterações", testar_cmdAjudar_semAlteracoes);
     CU_add_test(suite, "cmdAjudar - Comando com infracões", testar_cmdAjudar_comInfracoes);
     CU_add_test(suite, "cmdA - Comando inválido", testar_cmdA_invalido);
+    CU_add_test(suite, "cmdA - Gerou infracões", testar_cmdA_gerouInfracoes);
     CU_add_test(suite, "cmdA - Válido", testar_cmdA_valido);
     CU_add_test(suite, "cmdA - Sem alterações", testar_cmdA_semAlteracoes);
     CU_add_test(suite, "cmdResolver - Inválido", testar_cmdResolver_invalido);

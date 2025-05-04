@@ -1,7 +1,7 @@
         -:    0:Source:/usr/include/x86_64-linux-gnu/bits/string_fortified.h
         -:    0:Graph:comandos.gcno
         -:    0:Data:comandos.gcda
-        -:    0:Runs:1
+        -:    0:Runs:2
         -:    1:/* Copyright (C) 2004-2024 Free Software Foundation, Inc.
         -:    2:   This file is part of the GNU C Library.
         -:    3:
@@ -27,12 +27,12 @@
         -:   23:#endif
         -:   24:
         -:   25:__fortify_function void *
-      23*:   26:__NTH (memcpy (void *__restrict __dest, const void *__restrict __src,
+       66:   26:__NTH (memcpy (void *__restrict __dest, const void *__restrict __src,
         -:   27:	       size_t __len))
         -:   28:{
-      23*:   29:  return __builtin___memcpy_chk (__dest, __src, __len,
-call    0 returned 3
-call    1 returned 1
+       66:   29:  return __builtin___memcpy_chk (__dest, __src, __len,
+call    0 returned 8
+call    1 returned 4
         -:   30:				 __glibc_objsize0 (__dest));
         -:   31:}
         -:   32:
