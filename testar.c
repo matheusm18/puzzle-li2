@@ -478,6 +478,29 @@ void testar_cmdAjudar_comInfracoes() {
     liberarEstados(e);
 }
 
+void testar_cmdAjudar_gerouInfracoes() {
+    Estado *e = malloc(sizeof(Estado));
+    memset(e, 0, sizeof(Estado));
+
+    e->carregouTabuleiro = true;
+    e->guardarEstados = true;
+    e->printar = true;
+    e->linhas = 2; e->colunas = 2;
+
+    e->tabuleiro[0][0] = 'A'; e->tabuleiro[0][1] = 'a';
+    e->tabuleiro[1][0] = 'm'; e->tabuleiro[1][1] = '#';
+
+
+    CU_ASSERT_TRUE(cmdAjudar('a', NULL, e));
+
+    CU_ASSERT_EQUAL(e->tabuleiro[0][0], 'A');
+    CU_ASSERT_EQUAL(e->tabuleiro[0][1], 'a');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][0], 'm');
+    CU_ASSERT_EQUAL(e->tabuleiro[1][1], '#');
+
+    liberarEstados(e);
+}
+
 void testar_cmdA_invalido() {
     Estado e = {0};
 
@@ -730,6 +753,7 @@ int main() {
     CU_add_test(suite, "cmdAjudar - Comando válido 2", testar_cmdAjudar_valido2);
     CU_add_test(suite, "cmdAjudar - Sem alterações", testar_cmdAjudar_semAlteracoes);
     CU_add_test(suite, "cmdAjudar - Comando com infracões", testar_cmdAjudar_comInfracoes);
+    CU_add_test(suite, "cmdAjudar - Gerou infracões", testar_cmdAjudar_gerouInfracoes);
     CU_add_test(suite, "cmdA - Comando inválido", testar_cmdA_invalido);
     CU_add_test(suite, "cmdA - Gerou infracões", testar_cmdA_gerouInfracoes);
     CU_add_test(suite, "cmdA - Válido", testar_cmdA_valido);

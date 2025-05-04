@@ -1,7 +1,7 @@
         -:    0:Source:/usr/include/x86_64-linux-gnu/bits/stdio2.h
         -:    0:Graph:comandos.gcno
         -:    0:Data:comandos.gcda
-        -:    0:Runs:2
+        -:    0:Runs:1
         -:    1:/* Checking macros for stdio functions.
         -:    2:   Copyright (C) 2004-2024 Free Software Foundation, Inc.
         -:    3:   This file is part of the GNU C Library.
@@ -78,60 +78,60 @@
         -:   74:#if __USE_FORTIFY_LEVEL > 1
         -:   75:# ifdef __va_arg_pack
         -:   76:__fortify_function __nonnull ((1)) int
-       14:   77:fprintf (FILE *__restrict __stream, const char *__restrict __fmt, ...)
+        7:   77:fprintf (FILE *__restrict __stream, const char *__restrict __fmt, ...)
         -:   78:{
-       14:   79:  return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
-call    0 returned 2
-call    1 returned 8
-call    2 returned 4
+        7:   79:  return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
+call    0 returned 1
+call    1 returned 4
+call    2 returned 2
         -:   80:			__va_arg_pack ());
         -:   81:}
         -:   82:
         -:   83:__fortify_function int
-       84:   84:printf (const char *__restrict __fmt, ...)
+       43:   84:printf (const char *__restrict __fmt, ...)
         -:   85:{
-       62:   86:  return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-call    0 returned 2
-call    1 returned 2
-call    2 returned 2
-call    3 returned 2
-call    4 returned 2
-call    5 returned 2
-call    6 returned 2
-call    7 returned 2
-call    8 returned 2
-call    9 returned 2
-call   10 returned 2
-call   11 returned 2
-call   12 returned 2
-call   13 returned 4
-call   14 returned 2
-call   15 returned 2
-call   16 returned 2
-call   17 returned 2
+       32:   86:  return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+call    0 returned 1
+call    1 returned 1
+call    2 returned 1
+call    3 returned 1
+call    4 returned 1
+call    5 returned 1
+call    6 returned 1
+call    7 returned 1
+call    8 returned 1
+call    9 returned 1
+call   10 returned 1
+call   11 returned 1
+call   12 returned 1
+call   13 returned 2
+call   14 returned 1
+call   15 returned 1
+call   16 returned 1
+call   17 returned 1
 call   18 returned 1
 call   19 returned 1
-call   20 returned 4
-call   21 returned 2
-call   22 returned 2
-call   23 returned 2
-call   24 returned 2
-call   25 returned 2
-call   26 returned 2
-call   27 returned 2
-call   28 returned 2
-call   29 returned 2
-call   30 returned 2
-call   31 returned 2
-call   32 returned 2
-call   33 returned 2
-call   34 returned 2
-call   35 returned 2
-call   36 returned 2
-call   37 returned 2
-call   38 returned 2
-call   39 returned 2
-call   40 returned 2
+call   20 returned 2
+call   21 returned 1
+call   22 returned 1
+call   23 returned 1
+call   24 returned 1
+call   25 returned 1
+call   26 returned 1
+call   27 returned 1
+call   28 returned 1
+call   29 returned 1
+call   30 returned 1
+call   31 returned 1
+call   32 returned 1
+call   33 returned 1
+call   34 returned 1
+call   35 returned 1
+call   36 returned 1
+call   37 returned 1
+call   38 returned 1
+call   39 returned 1
+call   40 returned 1
         -:   87:}
         -:   88:# elif !defined __cplusplus
         -:   89:#  define printf(...) \
@@ -241,12 +241,12 @@ call   40 returned 2
         -:  193:
         -:  194:__fortify_function __wur __fortified_attr_access (__write_only__, 1, 2)
         -:  195:__nonnull ((3)) char *
-       10:  196:fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
+        5:  196:fgets (char *__restrict __s, int __n, FILE *__restrict __stream)
         -:  197:{
-       10:  198:  size_t sz = __glibc_objsize (__s);
-       10:  199:  if (__glibc_safe_or_unknown_len (__n, sizeof (char), sz))
-       10:  200:    return __fgets_alias (__s, __n, __stream);
-call    0 returned 10
+        5:  198:  size_t sz = __glibc_objsize (__s);
+        5:  199:  if (__glibc_safe_or_unknown_len (__n, sizeof (char), sz))
+        5:  200:    return __fgets_alias (__s, __n, __stream);
+call    0 returned 5
         -:  201:  if (__glibc_unsafe_len (__n, sizeof (char), sz))
         -:  202:    return __fgets_chk_warn (__s, sz, __n, __stream);
         -:  203:  return __fgets_chk (__s, sz, __n, __stream);
