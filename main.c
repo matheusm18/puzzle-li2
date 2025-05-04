@@ -1,7 +1,7 @@
 #include "comandos.h"
 
 int main() {
-    Estado estado = {0}; // inicializa todos os campos com zero
+    Estado estado = {0}; // inicializa todos os campos com zero e aloca na stack
     estado.guardarEstados = true;
     estado.printar = true;
     estado.looping = true;

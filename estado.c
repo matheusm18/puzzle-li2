@@ -40,20 +40,20 @@ bool comparaTabuleiros(Estado *e1, Estado *e2) {
 }
 
 int tabuleiroResolvido(Estado *e) {
-    if (!e->carregouTabuleiro) return false;
+    
     e->printar = false; // desativa a flag de printar
     cmdVerificarRestricoes('v', NULL, e);
 
     if (e->temInfracoes) {
         e->printar = true; // reativa a flag de printar
-        return 0;
+        return 0; // retorna 0 se o tabuleiro não pode ser resolvido
     }
 
     for (int i = 0; i < e->linhas; i++) {
         for (int j = 0; j < e->colunas; j++) {
-            if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') return 2;
+            if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') return 2; // retorna 2 se ainda houver letras minúsculas
         }
     }
     e->printar = true; // reativa a flag de printar
-    return 1;
+    return 1; // retorna 1 se o tabuleiro está resolvido
 }

@@ -12,7 +12,7 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
     // ficheiro é ponteiro para o tipo file (fopen retorna endereco)
     FILE *ficheiro = fopen(arg, "r");
     if (ficheiro == NULL) {
-        printf("\nErro: erro ao abrir %s\n", arg);
+        printf("\nErro: erro ao abrir '%s'.\n", arg);
         e->deuAviso = true;
         return false; // erro
     }
@@ -23,12 +23,12 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
     if (fscanf(ficheiro, "%d %d", &(e->linhas), &(e->colunas)) != 2) {
         fclose(ficheiro);
         e->deuAviso = true;
-        printf("\nErro: Formato inválido no ficheiro\n");
+        printf("\nErro: Formato inválido no ficheiro.\n");
         return false;
     }
 
     if (e->linhas <= 0 || e->colunas <= 0 || e->linhas > TMAX_MATRIZ || e->colunas > TMAX_MATRIZ) {
-        printf("\nErro: As dimensões do tabuleiro são inválidas\n");
+        printf("\nErro: As dimensões do tabuleiro são inválidas.\n");
         e->deuAviso = true;
         fclose(ficheiro);
         return false;
@@ -40,7 +40,7 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
     for (int i = 0; i < e->linhas; i++) {
         if (fgets(linha, sizeof(linha), ficheiro) == NULL) {
             e->deuAviso = true;
-            printf("\nErro ao ler a linha %d\n", i+1);
+            printf("\nErro ao ler a linha '%d'.\n", i+1);
             fclose(ficheiro);
             return false;
         }
@@ -50,7 +50,7 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
         for (int j = 0; j < e->colunas; j++) {
             if (linha[j] == '\0') {
                 e->deuAviso = true;
-                printf("\nErro: linha %d menor que o esperado\n", i); // se introduziu uma dimensao e depois a linha era dif
+                printf("\nErro: linha %d menor que o esperado.\n", i); // se introduziu uma dimensao e depois a linha era dif
                 fclose(ficheiro);
                 return false;
             }
@@ -89,7 +89,7 @@ bool cmdGravar(char cmd, char *arg, Estado *e) {
     fclose(ficheiro);
 
     if (e->printar == true) {
-        printf("\nTabuleiro gravado em %s\n", arg);
+        printf("\nTabuleiro gravado em '%s'.\n", arg);
         e->deuAviso = true;
     }
 
@@ -197,14 +197,14 @@ bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
                 // verificar mesma linha
                 for (int k = j+1; k < e->colunas; k++) {
                     if (k != j && e->tabuleiro[i][k] == celula) {
-                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas\n",'a'+j,i,'a'+k,i);
+                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+k,i);
                         e->temInfracoes = true;
                     }
                 }
                 // verificar mesma coluna
                 for (int k = i+1; k < e->linhas; k++) {
                     if (k != i && e->tabuleiro[k][j] == celula) {
-                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas\n",'a'+j,i,'a'+j,k);
+                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+j,k);
                         e->temInfracoes = true;
                     }
                 }
@@ -260,18 +260,7 @@ bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
     return true;
 }
 
-int contaLetras (Estado *e) {
-    int contador = 0;
-    for (int i = 0; i < e->linhas; i++) {
-        for (int j = 0; j < e->colunas; j++) {
-            if (e->tabuleiro[i][j] != '#') { // se a casa for uma letra
-                contador++;
-            }
-        }
-    }
-    return contador;
-}
-
+// pintar de branco uma casa quando seria impossível que esta fosse riscada por isolar casas brancas
 void ajudaIsolada (Estado *e) {
 
     for (int i = 0; i < e->linhas; i++) {
@@ -291,8 +280,8 @@ void ajudaIsolada (Estado *e) {
                 int linha = 0, coluna = 0;
                 for (int i = 0; i < e->linhas; i++) {
                     for (int j = 0; j < e->colunas; j++) {
-                        if (e->tabuleiro[i][j] != '#') {
-                            linha = i; coluna = j;
+                        if (e->tabuleiro[i][j] != '#') { // se for uma letra
+                            linha = i; coluna = j; // guarda a posição de uma letra para comparar depois
                             contadorLetras++;
                         }
                     }
@@ -310,11 +299,24 @@ void ajudaIsolada (Estado *e) {
 
 bool cmdAjudar(char cmd, char *arg, Estado *e) {
     if (cmd == 'a' && arg == NULL && e->carregouTabuleiro == true) {
-        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
 
-        // pinta de branco uma casa quando seria impossivel que esta fosse riscada
-        ajudaIsolada(e);
+        if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer as alterações)
 
+        bool ePrintarAntes = e->printar; // guarda o estado atual da flag
+
+        // se tiver infrações não ajuda porque pode piorar
+        e->printar = false; // desativa a flag para não printar enquanto executar o cmd 'v'
+        cmdVerificarRestricoes('v', NULL, e);
+        e->printar = ePrintarAntes;
+
+        if (e->temInfracoes == true){
+            if (e->printar == true) printf("\nO tabuleiro apresenta infrações, logo não é possível ajudar.\n");
+            // desfaz o guardarEstado do inicio já que nada mudou (se este foi executado)
+            if (e->guardarEstados == true) {
+                cmdUndo('d', NULL, e);
+            }
+            return true;
+        }
 
         // riscar todas as letras iguais a uma letra branca na mesma linha e/ou coluna
         for (int i = 0; i < e->linhas; i++) {
@@ -359,7 +361,21 @@ bool cmdAjudar(char cmd, char *arg, Estado *e) {
             }
         }
 
-        if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
+        // pinta de branco uma casa quando seria impossivel que esta fosse riscada
+        ajudaIsolada(e);
+        
+        if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações
+
+            if (comparaTabuleiros(e, e->ultimoEstado) == false) { // se o tabuleiro foi alterado
+                if (e->printar == true) printf("\nDicas aplicadas ao tabuleiro.\n");
+            }
+
+            else {
+                if (e->printar == true) printf("\nNenhuma dica encontrada.\n");
+                cmdUndo('d', NULL, e); // desfaz o guardarEstado do inicio já que nada mudou
+            }
+        }
+
         return true;
     }
     return false;
@@ -372,24 +388,36 @@ bool cmdA (char cmd, char *arg, Estado *e) {
         if (e->guardarEstados == true) guardarEstado(e); // guarda o estado atual (antes de fazer a alteração)
 
         bool flagGuardarAntes = e->guardarEstados; // guarda o estado atual da flag
+        bool flagPrintarAntes = e->printar;
 
         e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar o cmd 'a'
+        e->printar = false;
 
         Estado estadoAnterior;
         memcpy(&estadoAnterior, e, sizeof(Estado)); // copia o estado atual para comparação posterior
 
         bool flagContinuar = true; // flag para continuar a correr o loop
+        bool houveMudancasInicio = false; // flag para verificar se houve mudanças no tabuleiro desde que o comando A foi chamado
+
         while (flagContinuar == true) {
-            cmdAjudar('a', NULL, e); // atualiza o tabuleiro e consequentemente o estado
+            cmdAjudar('a', NULL, e); // faz a ajuda
 
             if (comparaTabuleiros(e, &estadoAnterior)) { // se forem iguais
-                flagContinuar = false; // para o loop
+                flagContinuar = false; // para o loop (n houve mudanças)
             }
 
+            else houveMudancasInicio = true;
             memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
         }
 
-        if (e->printar == true) printf("\nO comando A foi executado com sucesso!\n");
+        if (houveMudancasInicio == false && flagGuardarAntes == true) {
+            // se não houve mudancas e a flag de guardar estados estava ativa, desfaz o guardarEstado do inicio ja que nada mudou
+            cmdUndo('d', NULL, e);
+        }
+
+        e->printar = flagPrintarAntes;
+        if (e->printar == true && houveMudancasInicio == false) printf("\nNenhuma dica encontrada.\n");
+        if (e->printar == true && houveMudancasInicio == true) printf("\nO comando A foi executado com sucesso!\n");
         e->guardarEstados = flagGuardarAntes; // restaura o estado da flag
         return true;
     }
@@ -408,18 +436,17 @@ int resolverTabuleiro(Estado *e) {
             for (int j = 0; j < e->colunas; j++) {
                 if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
 
-                    char charAtual = e->tabuleiro[i][j]; // guarda a letra
-                    e->tabuleiro[i][j] = '#'; // risca a letra
+                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]); // pinta a letra
 
                     Estado estadoBackup;
-                    memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char riscado para salvar como backup
+                    memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
 
                     int resultado = resolverTabuleiro(e); // chama a função recursivamente para resolver o tabuleiro para este novo caso
 
                     if (resultado == 0) { // se não pode ser resolvido com a letra riscada volta pro backup
                         memcpy(e, &estadoBackup, sizeof(Estado)); // restaura o estado original para antes das chamadas recursivas
 
-                        e->tabuleiro[i][j] = toupper(charAtual); // pinta de branco
+                        e->tabuleiro[i][j] = '#'; // risca a letra
                         e->temInfracoes = false; // reinicia a flag de infrações (visto que pode ter sido alterada na recursão)
                     }
 
@@ -436,8 +463,15 @@ int resolverTabuleiro(Estado *e) {
 
 bool cmdResolver(char cmd, char *arg, Estado *e) {
     if (cmd == 'R' && arg == NULL && e->carregouTabuleiro == true) {
+
+        if (tabuleiroResolvido(e) == 1) { // se o tabuleiro já estiver resolvido
+            printf("\nO tabuleiro já está resolvido!\n");
+            mostrarTabuleiro(e);
+            return true;
+        }
+
         // guarda o estado atual antes de começar a resolver
-        guardarEstado(e); 
+        if (e->guardarEstados == true) guardarEstado(e); 
 
         e->guardarEstados = false; // ativa a flag para não guardar os estados enquanto executar os cmds
         e->printar = false; // desativa a flag de printar
@@ -449,6 +483,8 @@ bool cmdResolver(char cmd, char *arg, Estado *e) {
 
         if (resultado == 0) { // se não pode ser resolvido
             printf("\nAviso: O tabuleiro não pode ser resolvido.\n");
+            // desfaz o guardarEstado do inicio já que nada mudou
+            cmdUndo('d', NULL, e);
             return true;
         }
         else {
