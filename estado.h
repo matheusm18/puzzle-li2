@@ -8,6 +8,9 @@
 #include <ctype.h>
 
 #define TMAX_MATRIZ 26
+#define COLOR_GRAY   "\x1b[90m"
+#define COLOR_RED    "\x1b[31m"
+#define COLOR_RESET  "\x1b[0m"
 
 typedef struct estado {
     char tabuleiro[TMAX_MATRIZ][TMAX_MATRIZ];

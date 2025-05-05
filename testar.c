@@ -715,6 +715,40 @@ void testar_cmdHelp_invalido() {
     CU_ASSERT_FALSE(cmdHelp('h', "help", &e));
 }
 
+void testar_cmdStatus_valido() {
+    Estado e = {0};
+    e.carregouTabuleiro = true;
+    e.printar = true;
+    e.linhas = 2; e.colunas = 2;
+    e.tabuleiro[0][0] = '#'; e.tabuleiro[0][1] = 'A';
+    e.tabuleiro[1][0] = 'B'; e.tabuleiro[1][1] = 'C';
+
+    CU_ASSERT_TRUE(cmdStatus('S', NULL, &e));
+}
+
+void testar_cmdStatus_comInfracoes() {
+    Estado e = {0};
+    e.carregouTabuleiro = true;
+    e.printar = true;
+    e.linhas = 2; e.colunas = 2;
+    e.tabuleiro[0][0] = '#'; e.tabuleiro[0][1] = 'a';
+    e.tabuleiro[1][0] = '#'; e.tabuleiro[1][1] = 'C';
+
+    CU_ASSERT_TRUE(cmdStatus('S', NULL, &e));
+}
+
+void testar_cmdStatus_invalido() {
+    Estado e = {0};
+    e.carregouTabuleiro = true;
+    e.printar = true;
+    e.linhas = 2; e.colunas = 2;
+    e.tabuleiro[0][0] = '#'; e.tabuleiro[0][1] = 'a';
+    e.tabuleiro[1][0] = '#'; e.tabuleiro[1][1] = 'C';
+
+    CU_ASSERT_FALSE(cmdStatus('s', NULL, &e)); // inseriu 's' em vez de 'S'
+    CU_ASSERT_FALSE(cmdStatus('S', "status", &e)); // passou arg
+}
+
 int main() {
     CU_initialize_registry();
 
@@ -765,6 +799,9 @@ int main() {
     CU_add_test(suite, "cmdResolver - Tabuleiro Impossível", testar_cmdResolver_tabuleiroImpossivel);
     CU_add_test(suite, "cmdHelp - válido", testar_cmdHelp_valido);
     CU_add_test(suite, "cmdHelp - inválido", testar_cmdHelp_invalido);
+    CU_add_test(suite, "cmdStatus - válido", testar_cmdStatus_valido);
+    CU_add_test(suite, "cmdStatus - com infracões", testar_cmdStatus_comInfracoes);
+    CU_add_test(suite, "cmdStatus - inválido", testar_cmdStatus_invalido);
 
     CU_basic_set_mode(CU_BRM_VERBOSE);
     CU_basic_run_tests();

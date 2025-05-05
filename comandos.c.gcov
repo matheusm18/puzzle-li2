@@ -305,63 +305,63 @@ call    0 returned 1
         -:  174:    return false;
         -:  175:}
         -:  176:
-function casasPossiveisVisitar called 2558 returned 100% blocks executed 100%
-     2558:  177:int casasPossiveisVisitar(Estado *e, int l, int c, int visitadas[e->linhas][e->colunas]) {
-     2558:  178:    if (l < 0 || l >= e->linhas || c < 0 || c >= e->colunas || visitadas[l][c] == 1 || e->tabuleiro[l][c] == '#') return 0;
-branch  0 taken 2343 (fallthrough)
-branch  1 taken 215
-branch  2 taken 2124 (fallthrough)
-branch  3 taken 219
-branch  4 taken 1895 (fallthrough)
-branch  5 taken 229
-branch  6 taken 1663 (fallthrough)
-branch  7 taken 232
-branch  8 taken 878 (fallthrough)
-branch  9 taken 785
-branch 10 taken 613 (fallthrough)
-branch 11 taken 265
+function casasPossiveisVisitar called 2580 returned 100% blocks executed 100%
+     2580:  177:int casasPossiveisVisitar(Estado *e, int l, int c, int visitadas[e->linhas][e->colunas]) {
+     2580:  178:    if (l < 0 || l >= e->linhas || c < 0 || c >= e->colunas || visitadas[l][c] == 1 || e->tabuleiro[l][c] == '#') return 0;
+branch  0 taken 2363 (fallthrough)
+branch  1 taken 217
+branch  2 taken 2141 (fallthrough)
+branch  3 taken 222
+branch  4 taken 1911 (fallthrough)
+branch  5 taken 230
+branch  6 taken 1675 (fallthrough)
+branch  7 taken 236
+branch  8 taken 887 (fallthrough)
+branch  9 taken 788
+branch 10 taken 618 (fallthrough)
+branch 11 taken 269
         -:  179:
-      613:  180:    visitadas[l][c] = 1; // marca a casa como visitada
+      618:  180:    visitadas[l][c] = 1; // marca a casa como visitada
         -:  181:
-      613:  182:    return (1 + casasPossiveisVisitar(e, l - 1, c, visitadas) + casasPossiveisVisitar(e, l + 1, c, visitadas) + casasPossiveisVisitar(e, l, c - 1, visitadas) + casasPossiveisVisitar(e, l, c + 1, visitadas));
-call    0 returned 613
-call    1 returned 613
-call    2 returned 613
-call    3 returned 613
+      618:  182:    return (1 + casasPossiveisVisitar(e, l - 1, c, visitadas) + casasPossiveisVisitar(e, l + 1, c, visitadas) + casasPossiveisVisitar(e, l, c - 1, visitadas) + casasPossiveisVisitar(e, l, c + 1, visitadas));
+call    0 returned 618
+call    1 returned 618
+call    2 returned 618
+call    3 returned 618
         -:  183:}
         -:  184:
-function cmdVerificarRestricoes called 62 returned 100% blocks executed 100%
-       62:  185:bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
-       62:  186:    if (cmd != 'v' || arg != NULL || e->carregouTabuleiro == false) return false;
-branch  0 taken 62 (fallthrough)
+function cmdVerificarRestricoes called 64 returned 100% blocks executed 100%
+       64:  185:bool cmdVerificarRestricoes(char cmd, char *arg, Estado *e) {
+       64:  186:    if (cmd != 'v' || arg != NULL || e->carregouTabuleiro == false) return false;
+branch  0 taken 64 (fallthrough)
 branch  1 taken 0
-branch  2 taken 62 (fallthrough)
+branch  2 taken 64 (fallthrough)
 branch  3 taken 0
         -:  187:
-       62:  188:    e->temInfracoes = false; // reinicia a flag de infrações
+       64:  188:    e->temInfracoes = false; // reinicia a flag de infrações
         -:  189:
         -:  190:    // verificar letras brancas repetidas na mesma linha/coluna
-      215:  191:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 153
-branch  1 taken 62
-      546:  192:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 393
-branch  1 taken 153 (fallthrough)
-      393:  193:            char celula = e->tabuleiro[i][j];
+      221:  191:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 157
+branch  1 taken 64
+      558:  192:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 401
+branch  1 taken 157 (fallthrough)
+      401:  193:            char celula = e->tabuleiro[i][j];
         -:  194:            
         -:  195:            // verificar apenas células brancas (letras maiúsculas)
-      393:  196:            if (isupper(celula)) {
-branch  0 taken 180 (fallthrough)
-branch  1 taken 213
+      401:  196:            if (isupper(celula)) {
+branch  0 taken 184 (fallthrough)
+branch  1 taken 217
         -:  197:                // verificar mesma linha
-      342:  198:                for (int k = j+1; k < e->colunas; k++) {
-branch  0 taken 162
-branch  1 taken 180 (fallthrough)
-      162:  199:                    if (k != j && e->tabuleiro[i][k] == celula) {
-branch  0 taken 162 (fallthrough)
+      347:  198:                for (int k = j+1; k < e->colunas; k++) {
+branch  0 taken 163
+branch  1 taken 184 (fallthrough)
+      163:  199:                    if (k != j && e->tabuleiro[i][k] == celula) {
+branch  0 taken 163 (fallthrough)
 branch  1 taken 0
 branch  2 taken 10 (fallthrough)
-branch  3 taken 152
+branch  3 taken 153
        10:  200:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+k,i);
 branch  0 taken 1 (fallthrough)
 branch  1 taken 9
@@ -370,14 +370,14 @@ call    2 returned 1
         -:  202:                    }
         -:  203:                }
         -:  204:                // verificar mesma coluna
-      348:  205:                for (int k = i+1; k < e->linhas; k++) {
-branch  0 taken 168
-branch  1 taken 180 (fallthrough)
-      168:  206:                    if (k != i && e->tabuleiro[k][j] == celula) {
-branch  0 taken 168 (fallthrough)
+      353:  205:                for (int k = i+1; k < e->linhas; k++) {
+branch  0 taken 169
+branch  1 taken 184 (fallthrough)
+      169:  206:                    if (k != i && e->tabuleiro[k][j] == celula) {
+branch  0 taken 169 (fallthrough)
 branch  1 taken 0
 branch  2 taken 10 (fallthrough)
-branch  3 taken 158
+branch  3 taken 159
        10:  207:                        if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas brancas.\n",'a'+j,i,'a'+j,k);
 branch  0 taken 1 (fallthrough)
 branch  1 taken 9
@@ -390,32 +390,32 @@ call    2 returned 1
         -:  213:    }
         -:  214:    
         -:  215:    // verificar celulas riscadas vizinhas ortogonal
-      215:  216:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 153
-branch  1 taken 62 (fallthrough)
-      546:  217:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 393
-branch  1 taken 153 (fallthrough)
-      393:  218:            if (e->tabuleiro[i][j] == '#') {
-branch  0 taken 50 (fallthrough)
-branch  1 taken 343
+      221:  216:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 157
+branch  1 taken 64 (fallthrough)
+      558:  217:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 401
+branch  1 taken 157 (fallthrough)
+      401:  218:            if (e->tabuleiro[i][j] == '#') {
+branch  0 taken 53 (fallthrough)
+branch  1 taken 348
         -:  219:                // verificar em baixo e a direita
-       50:  220:                if (i < (e->linhas - 1) && e->tabuleiro[i+1][j] == '#') { // verifica em baixo
-branch  0 taken 24 (fallthrough)
-branch  1 taken 26
-branch  2 taken 2 (fallthrough)
-branch  3 taken 22
-        2:  221:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j, i+1);
+       53:  220:                if (i < (e->linhas - 1) && e->tabuleiro[i+1][j] == '#') { // verifica em baixo
+branch  0 taken 26 (fallthrough)
+branch  1 taken 27
+branch  2 taken 3 (fallthrough)
+branch  3 taken 23
+        3:  221:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j, i+1);
 branch  0 taken 1 (fallthrough)
-branch  1 taken 1
+branch  1 taken 2
 call    2 returned 1
-        2:  222:                    e->temInfracoes = true;
+        3:  222:                    e->temInfracoes = true;
         -:  223:                }
-       50:  224:                if (j < (e->colunas - 1) && e->tabuleiro[i][j+1] == '#') { // verifica a direita
-branch  0 taken 35 (fallthrough)
+       53:  224:                if (j < (e->colunas - 1) && e->tabuleiro[i][j+1] == '#') { // verifica a direita
+branch  0 taken 38 (fallthrough)
 branch  1 taken 15
 branch  2 taken 1 (fallthrough)
-branch  3 taken 34
+branch  3 taken 37
         1:  225:                    if (e->printar == true) printf("\nInfração: '%c%d' e '%c%d' são ambas riscadas.\n",'a'+j, i, 'a'+j+1, i);
 branch  0 taken 1 (fallthrough)
 branch  1 taken 0
@@ -427,39 +427,39 @@ call    2 returned 1
         -:  230:    }
         -:  231:    
         -:  232:    // verificar se todas as casas estão ligadas por um caminho ortogonal
-       62:  233:    int contadorLetras = 0;
-       62:  234:    int visitadas[e->linhas][e->colunas];
+       64:  233:    int contadorLetras = 0;
+       64:  234:    int visitadas[e->linhas][e->colunas];
         -:  235:
-      215:  236:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 153
-branch  1 taken 62
-      546:  237:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 393
-branch  1 taken 153 (fallthrough)
-      393:  238:            visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
+      221:  236:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 157
+branch  1 taken 64
+      558:  237:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 401
+branch  1 taken 157 (fallthrough)
+      401:  238:            visitadas[i][j] = 0; // inicializa todas as casas como não visitadas
         -:  239:        }
         -:  240:    }
         -:  241:
         -:  242:    int linha = 0, coluna = 0;
-      215:  243:    for (int i = 0; i < e->linhas; i++) {
-branch  0 taken 153
-branch  1 taken 62 (fallthrough)
-      546:  244:        for (int j = 0; j < e->colunas; j++) {
-branch  0 taken 393
-branch  1 taken 153 (fallthrough)
-      393:  245:            if (e->tabuleiro[i][j] != '#') {
-branch  0 taken 343 (fallthrough)
-branch  1 taken 50
-      343:  246:                linha = i; coluna = j;
-      343:  247:                contadorLetras++;
+      221:  243:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 157
+branch  1 taken 64 (fallthrough)
+      558:  244:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 401
+branch  1 taken 157 (fallthrough)
+      401:  245:            if (e->tabuleiro[i][j] != '#') {
+branch  0 taken 348 (fallthrough)
+branch  1 taken 53
+      348:  246:                linha = i; coluna = j;
+      348:  247:                contadorLetras++;
         -:  248:            }
         -:  249:        }
         -:  250:}
         -:  251:
-       62:  252:    if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
-call    0 returned 62
+       64:  252:    if (contadorLetras != casasPossiveisVisitar(e,linha,coluna,visitadas)) {
+call    0 returned 64
 branch  1 taken 1 (fallthrough)
-branch  2 taken 61
+branch  2 taken 63
         1:  253:        if (e->printar == true) {
 branch  0 taken 1 (fallthrough)
 branch  1 taken 0
@@ -469,11 +469,11 @@ call    0 returned 1
         1:  256:        e->temInfracoes = true;
         -:  257:    }
         -:  258:
-       62:  259:    if (e->temInfracoes == false && e->printar == true) printf("\nNenhuma infração encontrada. Tabuleiro válido!\n");
-branch  0 taken 38 (fallthrough)
-branch  1 taken 24
+       64:  259:    if (e->temInfracoes == false && e->printar == true) printf("\nNenhuma infração encontrada. Tabuleiro válido!\n");
+branch  0 taken 39 (fallthrough)
+branch  1 taken 25
 branch  2 taken 1 (fallthrough)
-branch  3 taken 37
+branch  3 taken 38
 call    4 returned 1
         -:  260:    return true;
         -:  261:}
@@ -962,3 +962,53 @@ call    0 returned 1
         -:  545:    }
         -:  546:    return false;
         -:  547:}
+        -:  548:
+function cmdStatus called 4 returned 100% blocks executed 100%
+        4:  549:bool cmdStatus(char cmd, char *arg, Estado *e) {
+        4:  550:    if (cmd != 'S' || arg != NULL || e->carregouTabuleiro == false) return false;
+branch  0 taken 2 (fallthrough)
+branch  1 taken 2
+branch  2 taken 2
+branch  3 taken 0
+        -:  551:
+        -:  552:    int brancas = 0, riscadas = 0, minusculas = 0;
+        6:  553:    for (int i = 0; i < e->linhas; i++) {
+branch  0 taken 4
+branch  1 taken 2 (fallthrough)
+       12:  554:        for (int j = 0; j < e->colunas; j++) {
+branch  0 taken 8
+branch  1 taken 4 (fallthrough)
+        8:  555:            char c = e->tabuleiro[i][j];
+        8:  556:            if (c == '#') riscadas++;
+branch  0 taken 3 (fallthrough)
+branch  1 taken 5
+        5:  557:            else if (isupper(c)) brancas++;
+branch  0 taken 4 (fallthrough)
+branch  1 taken 1
+        1:  558:            else if (islower(c)) minusculas++;
+branch  0 taken 1 (fallthrough)
+branch  1 taken 0
+        -:  559:        }
+        -:  560:    }
+        2:  561:    e->printar = false;
+        2:  562:    cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro está válido
+call    0 returned 2
+        2:  563:    e->printar = true;
+        -:  564:
+        2:  565:    int total = e->linhas * e->colunas;
+        2:  566:    printf("\nEstatísticas do tabuleiro:\n");
+call    0 returned 2
+        2:  567:    printf("  - Casas pintadas (brancas): %d\n", brancas);
+call    0 returned 2
+        2:  568:    printf("  - Casas riscadas (\"#\"):     %d\n", riscadas);
+call    0 returned 2
+        2:  569:    printf("  - Casas restantes:          %d\n", minusculas);
+call    0 returned 2
+        2:  570:    if (e->temInfracoes == false) printf("  - Progresso:               %.1f%%\n", 100.0 * (brancas + riscadas) / total);
+branch  0 taken 1 (fallthrough)
+branch  1 taken 1
+call    2 returned 1
+        1:  571:    else printf("  - Progresso: 0.0%% - há infraçoes\n");
+call    0 returned 1
+        -:  572:    return true;
+        -:  573:}

@@ -16,5 +16,6 @@ bool cmdAjudar(char cmd, char *arg, Estado *e);
 bool cmdA(char cmd, char *arg, Estado *e);
 bool cmdResolver(char cmd, char *arg, Estado *e);
 bool cmdHelp(char cmd, char *arg, Estado *e);
+bool cmdStatus(char cmd, char *arg, Estado *e);
 
 #endif

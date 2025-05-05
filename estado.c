@@ -19,15 +19,45 @@ void liberarEstados(Estado *e) {
 }
 
 void mostrarTabuleiro(Estado *e) {
+    int L = e->linhas, C = e->colunas;
+
+    // cabecalho para as letras (primeira linha)
+    printf("\n     ");
+    for (int j = 0; j < C; j++) {
+        printf(" %c", 'a' + j);
+    }
     printf("\n");
-    for (int i = 0; i < e->linhas; i++) {
-        for (int j = 0; j < e->colunas; j++) {
-            printf("%c ", e->tabuleiro[i][j]);
+
+    // linha para separar
+    printf("     ");
+    for (int j = 0; j < C; j++) {
+        printf(" ─");
+    }
+    printf("\n");
+
+    // imprimir cada linha (inclui o numero da linha, a barra e a linha do tabuleiro)
+    for (int i = 0; i < L; i++) {
+        // num da linha e barra
+        printf(" %2d |", i);
+
+        // imprimir cada coluna da linha com a devida cor (extra)
+        for (int j = 0; j < C; j++) {
+            char atual = e->tabuleiro[i][j];
+            if (atual == '#') {
+                printf(COLOR_RED " %c" COLOR_RESET, atual);
+            }
+            else if (isupper(atual)) {
+                printf(" %c", atual);
+            }
+            else {
+                printf(COLOR_GRAY " %c" COLOR_RESET, atual);
+            }
         }
         printf("\n");
     }
     printf("\n");
 }
+
 
 bool comparaTabuleiros(Estado *e1, Estado *e2) {
     if (e1->linhas != e2->linhas || e1->colunas != e2->colunas) return false;

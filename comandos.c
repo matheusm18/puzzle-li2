@@ -545,3 +545,29 @@ bool cmdHelp(char cmd, char *arg, Estado *e) {
     }
     return false;
 }
+
+bool cmdStatus(char cmd, char *arg, Estado *e) {
+    if (cmd != 'S' || arg != NULL || e->carregouTabuleiro == false) return false;
+
+    int brancas = 0, riscadas = 0, minusculas = 0;
+    for (int i = 0; i < e->linhas; i++) {
+        for (int j = 0; j < e->colunas; j++) {
+            char c = e->tabuleiro[i][j];
+            if (c == '#') riscadas++;
+            else if (isupper(c)) brancas++;
+            else if (islower(c)) minusculas++;
+        }
+    }
+    e->printar = false;
+    cmdVerificarRestricoes('v', NULL, e); // verifica se o tabuleiro está válido
+    e->printar = true;
+
+    int total = e->linhas * e->colunas;
+    printf("\nEstatísticas do tabuleiro:\n");
+    printf("  - Casas pintadas (brancas): %d\n", brancas);
+    printf("  - Casas riscadas (\"#\"):     %d\n", riscadas);
+    printf("  - Casas restantes:          %d\n", minusculas);
+    if (e->temInfracoes == false) printf("  - Progresso:               %.1f%%\n", 100.0 * (brancas + riscadas) / total);
+    else printf("  - Progresso: 0.0%% - há infraçoes\n");
+    return true;
+}

@@ -7,11 +7,18 @@ int main() {
     estado.looping = true;
     
     // array de comandos (ponteiros para funções)
-    Comando comandos[] = {cmdLer,cmdGravar,cmdSair,cmdPintar,cmdRiscar,cmdUndo,cmdVerificarRestricoes,cmdAjudar,cmdA,cmdResolver,cmdHelp,NULL};
+    Comando comandos[] = {cmdLer,cmdGravar,cmdSair,cmdPintar,cmdRiscar,cmdUndo,cmdVerificarRestricoes,cmdAjudar,cmdA,cmdResolver,cmdHelp,cmdStatus,NULL};
 
     char input[100];
     
-    printf("\nPara carregar o tabuleiro digite: l [arquivo]\n");
+    printf(
+    "\n"
+    "==============================================\n"
+    "       BEM-VINDO AO PUZZLE!   \n"
+    "      Digite 'h' para ajuda.          \n"
+    "      Digite 'l <arquivo>' para iniciar.\n"
+    "==============================================\n\n"
+);
     
     while (estado.looping) {
         estado.deuAviso = false; // reinicia a flag de aviso
