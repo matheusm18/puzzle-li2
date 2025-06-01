@@ -11,15 +11,13 @@ int main() {
 
     char input[100];
     
-    printf(
-    "\n"
-    "==============================================\n"
-    "       BEM-VINDO AO PUZZLE!   \n"
-    "      Digite 'h' para ajuda.          \n"
-    "      Digite 'l <arquivo>' para iniciar.\n"
-    "==============================================\n\n"
-);
-    
+    printf("\n"
+       COLOR_CYAN  "===============================================\n" COLOR_RESET
+       COLOR_WHITE "             BEM-VINDO AO PUZZLE!              \n" COLOR_RESET
+       COLOR_WHITE "       Digite 'h' para ver os comandos         \n" COLOR_RESET
+       COLOR_WHITE "     Digite 'l <ficheiro>' para iniciar.       \n" COLOR_RESET
+       COLOR_CYAN  "===============================================\n\n" COLOR_RESET);
+
     while (estado.looping) {
         estado.deuAviso = false; // reinicia a flag de aviso
 

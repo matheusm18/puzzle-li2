@@ -388,7 +388,7 @@ void testar_cmdAjudar_invalido() {
     CU_ASSERT_FALSE(cmdAjudar('a', NULL, &e)); // sem carregar tabuleiro
 }
 
-void testar_cmdAjudar_valido1() {
+void testar_cmdAjudar_valido() {
     Estado *e = malloc(sizeof(Estado));
     memset(e, 0, sizeof(Estado));
 
@@ -783,7 +783,7 @@ int main() {
     CU_add_test(suite, "cmdVerificarRestricoes - Casa a direita riscada", testar_cmdVerificar_riscadaDireita);
     CU_add_test(suite, "cmdVerificarRestricoes - Sem caminho", testar_cmdVerificar_semCaminho);
     CU_add_test(suite, "cmdAjudar - Comando inválido", testar_cmdAjudar_invalido);
-    CU_add_test(suite, "cmdAjudar - Comando válido 1", testar_cmdAjudar_valido1);
+    CU_add_test(suite, "cmdAjudar - Comando válido 1", testar_cmdAjudar_valido);
     CU_add_test(suite, "cmdAjudar - Comando válido 2", testar_cmdAjudar_valido2);
     CU_add_test(suite, "cmdAjudar - Sem alterações", testar_cmdAjudar_semAlteracoes);
     CU_add_test(suite, "cmdAjudar - Comando com infracões", testar_cmdAjudar_comInfracoes);

@@ -1,6 +1,6 @@
 #include "estado.h"
 
-// coloco o estado de agora em cima da stack
+// colocar o estado de agora em cima da stack (push)
 void guardarEstado(Estado *atual) {
     Estado *estadoGuardar = malloc(sizeof(Estado));
     if (estadoGuardar != NULL) {
@@ -10,6 +10,7 @@ void guardarEstado(Estado *atual) {
     }
 }
 
+// liberar a memoria de todos os estados
 void liberarEstados(Estado *e) {
     while (e != NULL) {
         Estado *anterior = e->ultimoEstado;
@@ -18,6 +19,7 @@ void liberarEstados(Estado *e) {
     }
 }
 
+// print do tabuleiro
 void mostrarTabuleiro(Estado *e) {
     int L = e->linhas, C = e->colunas;
 
@@ -58,7 +60,7 @@ void mostrarTabuleiro(Estado *e) {
     printf("\n");
 }
 
-
+// comparar tabuleiros
 bool comparaTabuleiros(Estado *e1, Estado *e2) {
     if (e1->linhas != e2->linhas || e1->colunas != e2->colunas) return false;
     for (int i = 0; i < e1->linhas; i++) {
@@ -69,6 +71,7 @@ bool comparaTabuleiros(Estado *e1, Estado *e2) {
     return true;
 }
 
+// verifica se o tabuleiro está resolvido
 int tabuleiroResolvido(Estado *e) {
     
     e->printar = false; // desativa a flag de printar

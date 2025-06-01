@@ -36,7 +36,7 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
 
     while (fgetc(ficheiro) != '\n'); // retira os espaços e passa o "cursor" para depois do \n
 
-    char linha[TMAX_MATRIZ + 2]; // adiciona espaço p/ \n e o \0
+    char linha[TMAX_MATRIZ + 2]; // adiciona espaço para o \n e o \0
     for (int i = 0; i < e->linhas; i++) {
         if (fgets(linha, sizeof(linha), ficheiro) == NULL) {
             e->deuAviso = true;
@@ -70,6 +70,7 @@ bool cmdLer(char cmd, char *arg, Estado *e) {
 
 bool cmdGravar(char cmd, char *arg, Estado *e) {
     if (cmd != 'g') return false;
+
     if (arg == NULL) {
         printf("\nErro: o comando gravar precisa de um argumento!\n");
         e->deuAviso = true;
@@ -99,9 +100,9 @@ bool cmdGravar(char cmd, char *arg, Estado *e) {
 bool cmdSair(char cmd, char *arg, Estado *e) {
     if (cmd == 's' && arg == NULL) {
         e->looping = false;
-        return true; // comando foi reconhecido
+        return true;
     }
-    return false; // comando não foi reconhecido
+    return false;
 }
 
 
@@ -166,7 +167,7 @@ bool cmdUndo(char cmd, char *arg, Estado *e) {
         }
         // fazer pop da stack (remove o que esta mais em cima (estado e))
         Estado *estadoAnterior = e->ultimoEstado; // pega o estado anterior
-        memcpy(e, estadoAnterior, sizeof(Estado)); // restaura o estado anterior (duplica e copia)
+        memcpy(e, estadoAnterior, sizeof(Estado)); // restaura o estado anterior
 
         free(estadoAnterior); // libera a memória do estado anterior
         return true;
@@ -266,8 +267,9 @@ void ajudaIsolada (Estado *e) {
     for (int i = 0; i < e->linhas; i++) {
         for (int j = 0; j < e->colunas; j++) {
             if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
+
                 char charAntigo = e->tabuleiro[i][j]; // guarda a letra
-                e->tabuleiro[i][j] = '#'; // converte para maiuscula
+                e->tabuleiro[i][j] = '#'; // risca a casa
 
                 int visitadas[e->linhas][e->colunas];
                 for (int i = 0; i < e->linhas; i++) {
@@ -321,7 +323,7 @@ bool cmdAjudar(char cmd, char *arg, Estado *e) {
         // riscar todas as letras iguais a uma letra branca na mesma linha e/ou coluna
         for (int i = 0; i < e->linhas; i++) {
             for (int j = 0; j < e->colunas; j++) {
-                if (e->tabuleiro[i][j] >= 'A' && e->tabuleiro[i][j] <= 'Z') { // Casa branca
+                if (e->tabuleiro[i][j] >= 'A' && e->tabuleiro[i][j] <= 'Z') { // casa branca
                     char letra = e->tabuleiro[i][j];
 
                     // percorrer a linha
@@ -361,9 +363,11 @@ bool cmdAjudar(char cmd, char *arg, Estado *e) {
             }
         }
 
+
         // pinta de branco uma casa quando seria impossivel que esta fosse riscada
         ajudaIsolada(e);
         
+
         if (e->guardarEstados == true) { // se o estado foi guardado no inicio verifica se houve alterações (se for chamado pelo 'A' não é necessário)
 
             if (comparaTabuleiros(e, e->ultimoEstado) == false) { // se o tabuleiro foi alterado
@@ -433,7 +437,7 @@ bool cmdA (char cmd, char *arg, Estado *e) {
 
                 // se o tabuleiro foi alterado e não tem infrações
                 houveMudancasInicio = true;
-                memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior
+                memcpy(&estadoAnterior, e, sizeof(Estado)); // atualiza o estado anterior (o que criamos e não o da struct)
 
             }
         }
@@ -458,37 +462,37 @@ int resolverTabuleiro(Estado *e) {
     if (tabuleiroResolvido (e) == 1) return 1; // se esta resolvido retorna 1
     if (tabuleiroResolvido (e) == 0) return 0; // se não pode ser resolvido retorna 0
     
-    // tem letras minusculas ainda
+    // tem letras minusculas ainda (tabuleiroResolvido retornou 2)
 
-        for (int i = 0; i < e->linhas; i++) {
-            for (int j = 0; j < e->colunas; j++) {
-                if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
+    for (int i = 0; i < e->linhas; i++) {
+        for (int j = 0; j < e->colunas; j++) {
+            if (e->tabuleiro[i][j] >= 'a' && e->tabuleiro[i][j] <= 'z') { // se a casa for minuscula
 
-                    // backup do estado
-                    Estado estadoBackup;
-                    memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
+                // backup do estado
+                Estado estadoBackup;
+                memcpy(&estadoBackup, e, sizeof(Estado)); // copia o estado de agora com o char pintado para salvar como backup
 
-                    // tenta pintar
-                    e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]);
-                    int resultado = resolverTabuleiro(e);
-                    if (resultado == 1) return 1;
+                // tenta pintar
+                e->tabuleiro[i][j] = toupper(e->tabuleiro[i][j]);
+                int resultado = resolverTabuleiro(e);
+                if (resultado == 1) return 1;
 
-                    // volta ao estado anterior
-                    memcpy(e, &estadoBackup, sizeof(Estado));
+                // volta ao estado anterior
+                memcpy(e, &estadoBackup, sizeof(Estado));
 
-                    // tenta riscar
-                    e->tabuleiro[i][j] = '#';
-                    e->temInfracoes = false; // reseta flag
-                    resultado = resolverTabuleiro(e);
-                    if (resultado == 1) return 1;
+                // tenta riscar
+                e->tabuleiro[i][j] = '#';
+                e->temInfracoes = false; // reseta flag
+                resultado = resolverTabuleiro(e);
+                if (resultado == 1) return 1;
 
-                    // volta ao estado original de novo
-                    memcpy(e, &estadoBackup, sizeof(Estado));
+                // volta ao estado original de novo
+                memcpy(e, &estadoBackup, sizeof(Estado));
 
-                    return 0;
-                }
+                return 0;
             }
         }
+    }
 
     return 0;
 }
@@ -529,18 +533,23 @@ bool cmdResolver(char cmd, char *arg, Estado *e) {
 bool cmdHelp(char cmd, char *arg, Estado *e) {
     (void)e; // p/ n dar warning de variavel não utilizada
     if (cmd == 'h' && arg == NULL) {
-        printf("\nComandos disponíveis:\n");
-        printf("l [ficheiro] - Carregar tabuleiro\n");
-        printf("g [ficheiro] - Gravar tabuleiro\n");
-        printf("b [coluna][linha] - Pintar célula\n");
-        printf("r [coluna][linha] - Riscar célula\n");
-        printf("d - Desfazer a última ação\n");
-        printf("v - Verificar se há infrações no tabuleiro\n");
-        printf("a - Aplicar dicas ao tabuleiro\n");
-        printf("A - Aplicar dicas ao tabuleiro até não haver mais alterações\n");
-        printf("R - Resolver o tabuleiro\n");
-        printf("h - Mostrar ajuda\n");
-        printf("s - Sair do programa\n");
+    
+        printf("\n"
+            COLOR_CYAN "==================== COMANDOS DISPONÍVEIS ====================\n\n" COLOR_RESET
+            COLOR_YELLOW " l [ficheiro]        " COLOR_RESET "- Carregar tabuleiro\n"
+            COLOR_YELLOW " g [ficheiro]        " COLOR_RESET "- Gravar tabuleiro\n"
+            COLOR_YELLOW " b [coluna][linha]   " COLOR_RESET "- Pintar célula\n"
+            COLOR_YELLOW " r [coluna][linha]   " COLOR_RESET "- Riscar célula\n"
+            COLOR_YELLOW " d                   " COLOR_RESET "- Desfazer a última ação\n"
+            COLOR_YELLOW " v                   " COLOR_RESET "- Verificar infrações no tabuleiro\n"
+            COLOR_YELLOW " a                   " COLOR_RESET "- Aplicar dicas ao tabuleiro\n"
+            COLOR_YELLOW " A                   " COLOR_RESET "- Aplicar dicas até não haver alterações\n"
+            COLOR_YELLOW " R                   " COLOR_RESET "- Resolver o tabuleiro\n"
+            COLOR_YELLOW " h                   " COLOR_RESET "- Mostrar todos os comandos\n"
+            COLOR_YELLOW " S                   " COLOR_RESET "- Mostrar status do jogo\n"
+            COLOR_YELLOW " s                   " COLOR_RESET "- Sair do programa\n\n"
+            COLOR_CYAN "==============================================================\n" COLOR_RESET);
+
         return true;
     }
     return false;
