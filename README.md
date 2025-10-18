@@ -28,15 +28,15 @@ Cada casa contém um **símbolo** (uma letra minúscula), e o jogador deve decid
 
 Principais funcionalidades implementadas:
 
-- 📄 **Leitura e gravação de tabuleiros** em ficheiros de texto
-- 🎨 **Manipulação de casas** — pintar (branco) e riscar (cardinal)
-- ↩️ **Desfazer ações anteriores** (histórico de jogadas)
-- 🧩 **Verificação automática** de todas as restrições do puzzle
-- 💡 **Sugestão de jogadas** com base em deduções lógicas
-- 🔁 **Aplicação iterativa de dicas** até não haver mais alterações possíveis
-- 🤖 **Resolução automática completa** do tabuleiro
-- 🔍 **Validação da conectividade** das células brancas
-- 🧪 **Testes unitários** abrangendo todas as funcionalidades com cobertura de código
+- **Leitura e gravação de tabuleiros** em ficheiros de texto
+- **Manipulação de casas** — pintar (branco) e riscar (cardinal)
+- **Desfazer ações anteriores** (histórico de jogadas)
+- **Verificação automática** de todas as restrições do puzzle
+- **Sugestão de jogadas** com base em deduções lógicas
+- **Aplicação iterativa de dicas** até não haver mais alterações possíveis
+- **Resolução automática completa** do tabuleiro
+- **Validação da conectividade** das células brancas
+- **Testes unitários** abrangendo todas as funcionalidades com cobertura de código
 
 ## 🕹️ Comandos Disponíveis
 
@@ -75,3 +75,8 @@ Para correr todos os testes automatizados:
 ```sh
 make testar
 ```
+
+## Desenvolvido por
+
+- [Matheus Monteiro Azevedo](https://github.com/matheusm18) - a111430
+- [Francisco Luciano Martins](https://github.com/XicoMartins54) - a111775
