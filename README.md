@@ -2,7 +2,7 @@
 
 Este puzzle é um jogo do gênero [Hitori](https://en.wikipedia.org/wiki/Hitori), desenvolvido em [C](https://www.c-language.org/about) no âmbito da cadeira Laboratórios de Informática II, do curso de Engenharia Informática na Universidade do Minho (ano letivo 2024/25).
 
-## 🏆 Nota final do projeto: 20/20
+## 🏆 Nota final do projeto: 20.0/20.0
 
 ## Enunciado do projeto
 
